@@ -1,0 +1,10 @@
+apply plugin: "org.jetbrains.kotlin.android"
+
+dependencies {
+  androidTestImplementation(libs.mockk)
+  androidTestImplementation(libs.truth)
+  androidTestImplementation(libs.turbine)
+  androidTestImplementation(libs.testExtJunit)
+  androidTestImplementation(libs.espressoCore)
+  androidTestImplementation(libs.testRunner)
+}

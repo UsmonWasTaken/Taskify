@@ -1,0 +1,8 @@
+apply plugin: "org.jetbrains.kotlin.android"
+
+dependencies {
+  testImplementation(libs.junit)
+  testImplementation(libs.mockk)
+  testImplementation(libs.truth)
+  testImplementation(libs.turbine)
+}

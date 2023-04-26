@@ -4,23 +4,31 @@ kotlin = "1.8.21"
 kotlinter = "3.14.0"
 detekt = "1.22.0"
 versions = "0.46.0"
+hilt = "2.45"
 
+desugar = "2.0.3"
 core-ktx = "1.10.0"
 appcompat = "1.6.1"
 material = "1.8.0"
 
-junit = "4.13.2"
-androidx-test-ext-junit = "1.1.5"
-espresso-core = "3.5.1"
-
 [libraries]
+desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
+
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+junit = { group = "junit", name = "junit", version = "4.13.2" }
+mockk = { group = "io.mockk", name = "mockk-android", version = "1.13.5" }
+truth = { group = "com.google.truth", name = "truth", version = "1.1.3" }
+turbine = { group = "app.cash.turbine", name = "turbine", version = "0.12.3" }
+
+testExtJunit = { group = "androidx.test.ext", name = "junit", version = "1.1.5" }
+espressoCore = { group = "androidx.test.espresso", name = "espresso-core", version = "3.5.1" }
+testRunner = { group = "androidx.test", name = "runner", version = "1.5.2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "gradle" }
@@ -30,3 +38,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
