@@ -12,3 +12,5 @@ subprojects {
   apply from: "$rootDir/plugins/kotlinter.gradle"
   apply from: "$rootDir/plugins/detekt.gradle"
 }
+
+apply from: "$rootDir/plugins/githooks.gradle"
