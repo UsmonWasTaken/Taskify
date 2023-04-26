@@ -5,8 +5,10 @@ plugins {
   alias(libs.plugins.kotlin.android) apply false
   alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.kotlinter) apply false
+  alias(libs.plugins.detekt) apply false
 }
 
 subprojects {
   apply from: "$rootDir/plugins/kotlinter.gradle"
+  apply from: "$rootDir/plugins/detekt.gradle"
 }

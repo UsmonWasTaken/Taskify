@@ -2,6 +2,7 @@
 gradle = "8.0.0"
 kotlin = "1.8.20"
 kotlinter = "3.13.0"
+detekt = "1.22.0"
 
 core-ktx = "1.10.0"
 appcompat = "1.6.1"
@@ -26,3 +27,4 @@ android-library = { id = "com.android.library", version.ref = "gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
