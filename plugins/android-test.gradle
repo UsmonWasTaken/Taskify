@@ -1,0 +1,15 @@
+android {
+  packagingOptions {
+    merge 'META-INF/LICENSE.md'
+    merge 'META-INF/LICENSE-notice.md'
+  }
+}
+
+dependencies {
+  androidTestImplementation(libs.mockk)
+  androidTestImplementation(libs.truth)
+  androidTestImplementation(libs.turbine)
+  androidTestImplementation(libs.testExtJunit)
+  androidTestImplementation(libs.espressoCore)
+  androidTestImplementation(libs.testRunner)
+}
