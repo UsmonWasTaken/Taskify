@@ -1,0 +1,7 @@
+<resources>
+  <!-- Dark application theme. -->
+  <style name="Theme.Taskify" parent="Base.Theme.Taskify">
+    <!-- Customize your dark theme here. -->
+    <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+  </style>
+</resources>

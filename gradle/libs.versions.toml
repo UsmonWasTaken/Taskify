@@ -1,0 +1,25 @@
+[versions]
+gradle-android = "8.0.0"
+kotlin-android = "1.8.20"
+
+core-ktx = "1.10.0"
+appcompat = "1.6.1"
+material = "1.8.0"
+
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+
+[libraries]
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "gradle-android" }
+android-library = { id = "com.android.library", version.ref = "gradle-android" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
