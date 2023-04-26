@@ -1,4 +1,9 @@
-apply plugin: "org.jetbrains.kotlin.android"
+android {
+  packagingOptions {
+    merge 'META-INF/LICENSE.md'
+    merge 'META-INF/LICENSE-notice.md'
+  }
+}
 
 dependencies {
   androidTestImplementation(libs.mockk)

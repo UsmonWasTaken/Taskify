@@ -1,5 +1,3 @@
-apply plugin: "org.jetbrains.kotlin.android"
-
 dependencies {
   testImplementation(libs.junit)
   testImplementation(libs.mockk)
