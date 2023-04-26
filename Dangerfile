@@ -1,4 +1,4 @@
-message "Thanks @#{github.pr_author}!"
+message "Thanks @#{github.pr_author}. Keep coding!"
 
 if github.pr_body.length == 0
     fail "Please provide a summary in the Pull Request description."

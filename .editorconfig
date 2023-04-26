@@ -12,3 +12,6 @@ max_line_length = 120
 ij_kotlin_imports_layout = *
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = true
+
+[*.xml]
+ij_xml_keep_line_breaks = true
