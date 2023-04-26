@@ -1,6 +1,7 @@
 [versions]
-gradle-android = "8.0.0"
-kotlin-android = "1.8.20"
+gradle = "8.0.0"
+kotlin = "1.8.20"
+kotlinter = "3.13.0"
 
 core-ktx = "1.10.0"
 appcompat = "1.6.1"
@@ -20,6 +21,8 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "gradle-android" }
-android-library = { id = "com.android.library", version.ref = "gradle-android" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
+android-application = { id = "com.android.application", version.ref = "gradle" }
+android-library = { id = "com.android.library", version.ref = "gradle" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }

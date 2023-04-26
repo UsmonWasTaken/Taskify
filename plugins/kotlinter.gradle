@@ -1,0 +1,15 @@
+apply plugin: "org.jmailen.kotlinter"
+
+kotlinter {
+
+  ignoreFailures = false
+
+  // Options for reporters: 'checkstyle', 'html', 'json', 'plain', 'sarif'
+  reporters = ['checkstyle', 'plain']
+
+  experimentalRules = false
+
+  // The disabledRules property can includes an array of rule ids you wish to disable.
+  // For example to allow wildcard imports: `disabledRules = ["no-wildcard-imports"]`
+  disabledRules = []
+}
