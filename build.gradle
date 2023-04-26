@@ -6,6 +6,7 @@ plugins {
   alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.kotlinter) apply false
   alias(libs.plugins.detekt) apply false
+  alias(libs.plugins.versions) apply false
 }
 
 subprojects {
@@ -14,3 +15,4 @@ subprojects {
 }
 
 apply from: "$rootDir/plugins/githooks.gradle"
+apply from: "$rootDir/plugins/versions.gradle"
