@@ -32,8 +32,8 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-abstract class BaseFragment<T : ViewDataBinding>(
-  @LayoutRes private val layoutId: Int = 0,
+abstract class BaseFragment<out T : ViewDataBinding>(
+  @LayoutRes private val layoutId: Int,
 ) : Fragment(layoutId) {
 
   private var _binding: T? = null
@@ -54,7 +54,7 @@ abstract class BaseFragment<T : ViewDataBinding>(
     _binding = null
   }
 
-  fun <T> Flow<T>.lifecycleAwareCollect(collector: FlowCollector<T>) {
+  protected fun <T> Flow<T>.lifecycleAwareCollect(collector: FlowCollector<T>) {
     viewLifecycleOwner.lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         collect(collector)
@@ -62,7 +62,7 @@ abstract class BaseFragment<T : ViewDataBinding>(
     }
   }
 
-  fun <T> Flow<T>.lifecycleAwareCollectLatest(collector: (T) -> Unit) {
+  protected fun <T> Flow<T>.lifecycleAwareCollectLatest(collector: (T) -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         collectLatest(collector)
