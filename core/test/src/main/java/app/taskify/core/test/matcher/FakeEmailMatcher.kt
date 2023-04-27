@@ -27,9 +27,9 @@ class FakeEmailMatcher {
 
   fun mockResultForEmail(
     email: CharSequence,
-    result: Boolean,
+    isValidEmail: Boolean,
   ) {
-    every { mock.matches(email) } returns result
+    every { mock.matches(email) } returns isValidEmail
   }
 
   fun verifyEmailMatcherNeverCalled() {

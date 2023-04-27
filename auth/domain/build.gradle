@@ -10,4 +10,6 @@ dependencies {
 
   implementation(libs.javax.inject)
   implementation(libs.coroutines.core)
+
+  androidTestImplementation project(":core:test")
 }
