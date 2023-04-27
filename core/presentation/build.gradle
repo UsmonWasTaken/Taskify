@@ -12,4 +12,6 @@ dependencies {
   implementation project(":core:domain")
 
   implementation(libs.material)
+  implementation(libs.fragment)
+  implementation(libs.coroutines.core)
 }
