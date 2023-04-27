@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.auth.domain.repository
+package app.taskify.core.domain.exception
 
-interface AuthRepository {
-  suspend fun signIn(email: String, password: String): Result<String>
-  suspend fun signUp(email: String, password: String): Result<String>
-}
+class NetworkException @JvmOverloads constructor(
+  message: String? = null,
+  cause: Throwable? = null,
+) : RuntimeException(message, cause)

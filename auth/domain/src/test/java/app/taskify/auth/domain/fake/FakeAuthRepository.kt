@@ -13,9 +13,29 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.auth.domain.repository
+package app.taskify.auth.domain.fake
 
-interface AuthRepository {
-  suspend fun signIn(email: String, password: String): Result<String>
-  suspend fun signUp(email: String, password: String): Result<String>
+import app.taskify.auth.domain.repository.AuthRepository
+import io.mockk.coEvery
+import io.mockk.mockk
+
+class FakeAuthRepository {
+
+  val mock: AuthRepository = mockk()
+
+  fun mockSignInResultForEmailAndPassword(
+    email: String,
+    password: String,
+    result: Result<String>,
+  ) {
+    coEvery { mock.signIn(email, password) } returns result
+  }
+
+  fun mockSignUpResultForEmailAndPassword(
+    email: String,
+    password: String,
+    result: Result<String>,
+  ) {
+    coEvery { mock.signUp(email, password) } returns result
+  }
 }

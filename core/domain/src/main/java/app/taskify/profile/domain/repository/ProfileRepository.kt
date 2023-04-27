@@ -13,9 +13,15 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.auth.domain.repository
+package app.taskify.profile.domain.repository
 
-interface AuthRepository {
-  suspend fun signIn(email: String, password: String): Result<String>
-  suspend fun signUp(email: String, password: String): Result<String>
+interface ProfileRepository {
+
+  suspend fun retrieveProfile(userId: String): Result<Unit>
+
+  suspend fun setupProfile(
+    displayName: String,
+    email: String,
+    userId: String,
+  ): Result<Unit>
 }
