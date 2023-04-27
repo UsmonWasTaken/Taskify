@@ -2,7 +2,7 @@
 gradle = "8.0.0"
 kotlin = "1.8.21"
 kotlinter = "3.14.0"
-detekt = "1.22.0"
+detekt = "1.23.0-RC2"
 versions = "0.46.0"
 hilt = "2.45"
 
