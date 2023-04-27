@@ -1,0 +1,17 @@
+apply from: "$rootDir/plugins/kotlin-android.gradle"
+
+android {
+  namespace "app.taskify.core.presentation"
+
+  buildFeatures {
+    dataBinding true
+  }
+}
+
+dependencies {
+  implementation project(":core:domain")
+
+  implementation(libs.material)
+  implementation(libs.fragment)
+  implementation(libs.coroutines.core)
+}

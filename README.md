@@ -1,8 +1,10 @@
-## Taskify
+# Taskify
+
+[![Android Build](https://github.com/usdaves/Taskify/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/usdaves/Taskify/actions/workflows/build.yaml)
 
 More information coming soon…
 
-## License
+# License
 
 ```textmate
 Copyright 2023 The Android Open Source Project

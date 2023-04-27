@@ -91,5 +91,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: test-reports-${{ matrix.api-level }}
+          name: android-test-reports
           path: '*/build/reports/androidTests'
