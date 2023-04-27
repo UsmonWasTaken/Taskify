@@ -22,4 +22,13 @@
   <string name="no_network_connection">Could not connect to the server. Please, check you internet connection!</string>
   <string name="invalid_credentials">Email or password went wrong. Please, try again.</string>
   <string name="email_already_in_use">This email is already in use. Please, use another one</string>
+
+  <string name="empty_display_name">Display name couldn\'t be empty</string>
+  <string name="empty_email">Email couldn\'t be empty</string>
+  <string name="empty_password">Password couldn\'t be empty</string>
+  <string name="short_display_name">Display name must contains at least %s characters</string>
+  <string name="long_display_name">Display name must contains at most %s characters</string>
+  <string name="invalid_email">Email is not valid. Please, enter a valid email address</string>
+  <string name="short_password">Password must contains at least %s characters.</string>
+  <string name="long_password">Password must contains at most %s characters.</string>
 </resources>
