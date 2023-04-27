@@ -13,26 +13,12 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.core.test.matcher
+package app.taskify.auth.domain.usecases.signup
 
-import app.taskify.core.domain.matcher.EmailMatcher
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import app.taskify.core.domain.Text
 
-@Suppress("unused")
-class FakeEmailMatcher {
-
-  val mock: EmailMatcher = mockk()
-
-  fun mockResultForEmail(
-    email: CharSequence,
-    isValidEmail: Boolean,
-  ) {
-    every { mock.matches(email) } returns isValidEmail
-  }
-
-  fun verifyEmailMatcherNeverCalled() {
-    verify(exactly = 0) { mock.matches(any()) }
-  }
-}
+data class SignUpValidationResult(
+  val displayNameError: Text?,
+  val emailError: Text?,
+  val passwordError: Text?,
+)

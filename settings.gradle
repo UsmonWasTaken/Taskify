@@ -17,6 +17,7 @@ rootProject.name = "Taskify"
 include ':app'
 
 include ':core:domain'
-
-include ':core:test'
 include ':core:presentation'
+include ':core:test'
+
+include ':auth:domain'

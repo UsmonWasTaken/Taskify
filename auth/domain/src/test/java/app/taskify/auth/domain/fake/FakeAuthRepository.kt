@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.core.test.matcher
+package app.taskify.auth.domain.fake
 
-import app.taskify.core.domain.matcher.EmailMatcher
-import io.mockk.every
+import app.taskify.auth.domain.repository.AuthRepository
+import io.mockk.coEvery
 import io.mockk.mockk
-import io.mockk.verify
 
-@Suppress("unused")
-class FakeEmailMatcher {
+class FakeAuthRepository {
 
-  val mock: EmailMatcher = mockk()
+  val mock: AuthRepository = mockk()
 
-  fun mockResultForEmail(
-    email: CharSequence,
-    isValidEmail: Boolean,
+  fun mockSignInResultForEmailAndPassword(
+    email: String,
+    password: String,
+    result: Result<String>,
   ) {
-    every { mock.matches(email) } returns isValidEmail
+    coEvery { mock.signIn(email, password) } returns result
   }
 
-  fun verifyEmailMatcherNeverCalled() {
-    verify(exactly = 0) { mock.matches(any()) }
+  fun mockSignUpResultForEmailAndPassword(
+    email: String,
+    password: String,
+    result: Result<String>,
+  ) {
+    coEvery { mock.signUp(email, password) } returns result
   }
 }

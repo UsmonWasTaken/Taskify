@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.core.test.matcher
+package app.taskify.profile.domain.repository
 
-import app.taskify.core.domain.matcher.EmailMatcher
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+interface ProfileRepository {
 
-@Suppress("unused")
-class FakeEmailMatcher {
+  suspend fun retrieveProfile(userId: String): Result<Unit>
 
-  val mock: EmailMatcher = mockk()
-
-  fun mockResultForEmail(
-    email: CharSequence,
-    isValidEmail: Boolean,
-  ) {
-    every { mock.matches(email) } returns isValidEmail
-  }
-
-  fun verifyEmailMatcherNeverCalled() {
-    verify(exactly = 0) { mock.matches(any()) }
-  }
+  suspend fun setupProfile(
+    displayName: String,
+    email: String,
+    userId: String,
+  ): Result<Unit>
 }

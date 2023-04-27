@@ -13,26 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.core.test.matcher
+package app.taskify.core.domain.exception
 
-import app.taskify.core.domain.matcher.EmailMatcher
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-
-@Suppress("unused")
-class FakeEmailMatcher {
-
-  val mock: EmailMatcher = mockk()
-
-  fun mockResultForEmail(
-    email: CharSequence,
-    isValidEmail: Boolean,
-  ) {
-    every { mock.matches(email) } returns isValidEmail
-  }
-
-  fun verifyEmailMatcherNeverCalled() {
-    verify(exactly = 0) { mock.matches(any()) }
-  }
-}
+class NetworkException @JvmOverloads constructor(
+  message: String? = null,
+  cause: Throwable? = null,
+) : RuntimeException(message, cause)

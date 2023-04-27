@@ -1,0 +1,17 @@
+apply from: "$rootDir/plugins/kotlin-android.gradle"
+apply from: "$rootDir/plugins/android-test.gradle"
+apply from: "$rootDir/plugins/kotlin-test.gradle"
+
+android {
+  namespace "app.taskify.auth.domain"
+}
+
+dependencies {
+  implementation project(":core:domain")
+
+  implementation(libs.javax.inject)
+  implementation(libs.coroutines.core)
+
+  testImplementation project(":core:test")
+  androidTestImplementation project(":core:test")
+}
