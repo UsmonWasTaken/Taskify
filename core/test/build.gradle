@@ -1,0 +1,13 @@
+apply from: "$rootDir/plugins/kotlin-android.gradle"
+apply from: "$rootDir/plugins/kotlin-test.gradle"
+
+android {
+  namespace "app.taskify.core.test"
+}
+
+dependencies {
+  implementation project(":core:domain")
+
+  implementation(libs.mockk)
+  implementation(libs.coroutines.core)
+}

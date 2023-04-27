@@ -10,6 +10,7 @@ desugar = "2.0.3"
 core-ktx = "1.10.0"
 appcompat = "1.6.1"
 material = "1.8.0"
+coroutines = "1.6.4"
 
 [libraries]
 desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
@@ -20,6 +21,10 @@ material = { group = "com.google.android.material", name = "material", version.r
 javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+
 
 junit = { group = "junit", name = "junit", version = "4.13.2" }
 mockk = { group = "io.mockk", name = "mockk-android", version = "1.13.5" }

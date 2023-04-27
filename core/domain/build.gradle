@@ -4,3 +4,7 @@ apply from: "$rootDir/plugins/android-test.gradle"
 android {
   namespace "app.taskify.core.domain"
 }
+
+dependencies {
+  implementation(libs.coroutines.core)
+}
