@@ -19,3 +19,4 @@ include ':app'
 include ':core:domain'
 
 include ':core:test'
+include ':core:presentation'
