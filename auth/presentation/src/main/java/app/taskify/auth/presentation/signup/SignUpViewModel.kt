@@ -28,7 +28,7 @@ import app.taskify.auth.domain.repository.SignUpResult.SettingUpProfile
 import app.taskify.auth.domain.usecases.signup.SignUpUseCase
 import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase
 import app.taskify.auth.presentation.signin.SignInViewState
-import app.taskify.auth.presentation.signup.SignUpNavigationEvent.NavigateBackToSignUp
+import app.taskify.auth.presentation.signup.SignUpNavigationEvent.NavigateBackToSignIn
 import app.taskify.auth.presentation.signup.SignUpNavigationEvent.NavigateToMain
 import app.taskify.core.domain.Text
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -73,7 +73,7 @@ class SignUpViewModel @Inject constructor(
   }
 
   fun onSignInClicked() {
-    navigationChannel.trySend(NavigateBackToSignUp)
+    navigationChannel.trySend(NavigateBackToSignIn)
   }
 
   fun onSignUpClicked() {

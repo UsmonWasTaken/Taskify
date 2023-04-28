@@ -17,7 +17,7 @@ package app.taskify.auth.presentation.signup
 
 sealed interface SignUpNavigationEvent {
 
-  object NavigateBackToSignUp : SignUpNavigationEvent
+  object NavigateBackToSignIn : SignUpNavigationEvent
 
   object NavigateToMain : SignUpNavigationEvent
 }

@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.auth.presentation.signin
+package app.taskify.auth.presentation.signup
 
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.viewModels
 import app.taskify.auth.presentation.R
-import app.taskify.auth.presentation.databinding.FragmentSignInBinding
-import app.taskify.auth.presentation.signin.SignInNavigationEvent.NavigateToMain
-import app.taskify.auth.presentation.signin.SignInNavigationEvent.NavigateToSignUp
+import app.taskify.auth.presentation.databinding.FragmentSignUpBinding
+import app.taskify.auth.presentation.signup.SignUpNavigationEvent.NavigateBackToSignIn
+import app.taskify.auth.presentation.signup.SignUpNavigationEvent.NavigateToMain
 import app.taskify.core.presentation.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignInFragment : BaseFragment<FragmentSignInBinding>(R.layout.fragment_sign_in) {
+class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sign_up) {
 
   @VisibleForTesting
-  internal val viewModel: SignInViewModel by viewModels()
+  internal val viewModel: SignUpViewModel by viewModels()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     binding.viewModel = viewModel
 
     viewModel.messageFlow.lifecycleAwareCollect { message ->
-      Snackbar.make(binding.signInRoot, message.getString(requireContext()), Snackbar.LENGTH_SHORT).show()
+      Snackbar.make(binding.signUpRoot, message.getString(requireContext()), Snackbar.LENGTH_SHORT).show()
     }
 
     viewModel.navigationFlow.lifecycleAwareCollectLatest { event ->
@@ -46,8 +46,8 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(R.layout.fragment_sig
           // Navigate to the main feature from here.
         }
 
-        NavigateToSignUp -> {
-          // Navigate to the Sign Up fragment from here.
+        NavigateBackToSignIn -> {
+          // Navigate back to the Sign In fragment from here.
         }
       }
     }
