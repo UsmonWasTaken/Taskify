@@ -15,12 +15,13 @@
 
 package app.taskify.auth.domain.usecases.signup
 
-import app.taskify.auth.domain.R.string
+import app.taskify.auth.domain.usecases.signup.SignUpValidationResult.DisplayNameError
+import app.taskify.auth.domain.usecases.signup.SignUpValidationResult.EmailError
+import app.taskify.auth.domain.usecases.signup.SignUpValidationResult.PasswordError
 import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase.Companion.MAX_DISPLAY_NAME_LENGTH
 import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase.Companion.MAX_PASSWORD_LENGTH
 import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase.Companion.MIN_DISPLAY_NAME_LENGTH
 import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase.Companion.MIN_PASSWORD_LENGTH
-import app.taskify.core.domain.Text
 import app.taskify.core.test.matcher.FakeEmailMatcher
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -52,8 +53,7 @@ class SignUpValidationUseCaseTest {
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = true)
     val validationResult = signUpValidationUseCase(displayName, email, password)
 
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.displayNameError).isEqualTo(Text(string.empty_display_name))
+    assertThat(validationResult.displayNameError).isEqualTo(DisplayNameError.Empty)
   }
 
   @Test
@@ -65,8 +65,7 @@ class SignUpValidationUseCaseTest {
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = true)
     val validationResult = signUpValidationUseCase(displayName, email, password)
 
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.displayNameError).isEqualTo(Text(string.short_display_name, MIN_DISPLAY_NAME_LENGTH))
+    assertThat(validationResult.displayNameError).isEqualTo(DisplayNameError.TooShort)
   }
 
   @Test
@@ -78,8 +77,7 @@ class SignUpValidationUseCaseTest {
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = true)
     val validationResult = signUpValidationUseCase(displayName, email, password)
 
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.displayNameError).isEqualTo(Text(string.long_display_name, MAX_DISPLAY_NAME_LENGTH))
+    assertThat(validationResult.displayNameError).isEqualTo(DisplayNameError.TooLong)
   }
 
   @Test
@@ -90,8 +88,7 @@ class SignUpValidationUseCaseTest {
 
     val validationResult = signUpValidationUseCase(displayName, email, password)
 
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.emailError).isEqualTo(Text(string.empty_email))
+    assertThat(validationResult.emailError).isEqualTo(EmailError.Empty)
     fakeEmailMatcher.verifyEmailMatcherNeverCalled()
   }
 
@@ -104,8 +101,7 @@ class SignUpValidationUseCaseTest {
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = false)
     val validationResult = signUpValidationUseCase(displayName, email, password)
 
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.emailError).isEqualTo(Text(string.invalid_email))
+    assertThat(validationResult.emailError).isEqualTo(EmailError.Invalid)
   }
 
   @Test
@@ -116,8 +112,8 @@ class SignUpValidationUseCaseTest {
 
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = true)
     val validationResult = signUpValidationUseCase(displayName, email, password)
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.passwordError).isEqualTo(Text(string.empty_password))
+
+    assertThat(validationResult.passwordError).isEqualTo(PasswordError.Empty)
   }
 
   @Test
@@ -128,8 +124,8 @@ class SignUpValidationUseCaseTest {
 
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = true)
     val validationResult = signUpValidationUseCase(displayName, email, password)
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.passwordError).isEqualTo(Text(string.short_password, MIN_PASSWORD_LENGTH))
+
+    assertThat(validationResult.passwordError).isEqualTo(PasswordError.TooShort)
   }
 
   @Test
@@ -140,8 +136,8 @@ class SignUpValidationUseCaseTest {
 
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = true)
     val validationResult = signUpValidationUseCase(displayName, email, password)
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.passwordError).isEqualTo(Text(string.long_password, MAX_PASSWORD_LENGTH))
+
+    assertThat(validationResult.passwordError).isEqualTo(PasswordError.TooLong)
   }
 
   @Test
@@ -153,6 +149,6 @@ class SignUpValidationUseCaseTest {
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = true)
     val validationResult = signUpValidationUseCase(displayName, email, password)
 
-    assertThat(validationResult).isNull()
+    assertThat(validationResult.areInputsValid).isTrue()
   }
 }

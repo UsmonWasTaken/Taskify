@@ -15,9 +15,23 @@
 
 package app.taskify.auth.domain.usecases.signin
 
+import app.taskify.auth.domain.R
 import app.taskify.core.domain.Text
 
 data class SignInValidationResult(
-  val emailError: Text?,
-  val passwordError: Text?,
-)
+  val emailError: EmailError?,
+  val passwordError: PasswordError?,
+) {
+
+  inline val areInputsValid: Boolean
+    get() = emailError == null && passwordError == null
+
+  sealed class EmailError(val description: Text) {
+    object Empty : EmailError(Text(R.string.empty_email))
+    object Invalid : EmailError(Text(R.string.invalid_email))
+  }
+
+  sealed class PasswordError(val description: Text) {
+    object Empty : PasswordError(Text(R.string.empty_password))
+  }
+}
