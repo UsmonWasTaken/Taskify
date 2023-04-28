@@ -15,23 +15,25 @@
 
 package app.taskify.auth.domain.usecases.signin
 
-import app.taskify.auth.domain.R
-import app.taskify.core.domain.Text
+import app.taskify.auth.domain.repository.SignInResult
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import kotlinx.coroutines.flow.flowOf
 
-data class SignInValidationResult(
-  val emailError: EmailError?,
-  val passwordError: PasswordError?,
-) {
+class FakeSignInUseCase {
 
-  inline val areInputsValid: Boolean
-    get() = emailError == null && passwordError == null
+  val mock: SignInUseCase = mockk()
 
-  sealed class EmailError(val description: Text) {
-    object Empty : EmailError(Text(R.string.empty_email))
-    object Invalid : EmailError(Text(R.string.invalid_email))
+  fun mockSignInResultResultForEmailAndPassword(
+    email: String,
+    password: String,
+    vararg signInResult: SignInResult,
+  ) {
+    every { mock(email, password) } returns flowOf(*signInResult)
   }
 
-  sealed class PasswordError(val description: Text) {
-    object Empty : PasswordError(Text(R.string.empty_password))
+  fun verifyUseCaseNeverCalled() {
+    verify(exactly = 0) { mock(any(), any()) }
   }
 }

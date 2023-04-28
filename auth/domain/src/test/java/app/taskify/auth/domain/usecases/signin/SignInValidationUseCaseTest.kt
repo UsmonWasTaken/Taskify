@@ -15,8 +15,8 @@
 
 package app.taskify.auth.domain.usecases.signin
 
-import app.taskify.auth.domain.R
-import app.taskify.core.domain.Text
+import app.taskify.auth.domain.usecases.signin.SignInValidationResult.EmailError
+import app.taskify.auth.domain.usecases.signin.SignInValidationResult.PasswordError
 import app.taskify.core.test.matcher.FakeEmailMatcher
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -45,8 +45,7 @@ class SignInValidationUseCaseTest {
 
     val validationResult = signInValidationUseCase(email, password)
 
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.emailError).isEqualTo(Text(R.string.empty_email))
+    assertThat(validationResult.emailError).isEqualTo(EmailError.Empty)
     fakeEmailMatcher.verifyEmailMatcherNeverCalled()
   }
 
@@ -58,8 +57,7 @@ class SignInValidationUseCaseTest {
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = false)
     val validationResult = signInValidationUseCase(email, password)
 
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.emailError).isEqualTo(Text(R.string.invalid_email))
+    assertThat(validationResult.emailError).isEqualTo(EmailError.Invalid)
   }
 
   @Test
@@ -69,8 +67,8 @@ class SignInValidationUseCaseTest {
 
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = true)
     val validationResult = signInValidationUseCase(email, password)
-    assertThat(validationResult).isNotNull()
-    assertThat(validationResult?.passwordError).isEqualTo(Text(R.string.empty_password))
+
+    assertThat(validationResult.passwordError).isEqualTo(PasswordError.Empty)
   }
 
   @Test
@@ -81,6 +79,6 @@ class SignInValidationUseCaseTest {
     fakeEmailMatcher.mockResultForEmail(email, isValidEmail = true)
     val validationResult = signInValidationUseCase(email, password)
 
-    assertThat(validationResult).isNull()
+    assertThat(validationResult.areInputsValid).isTrue()
   }
 }

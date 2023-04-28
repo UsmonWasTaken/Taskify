@@ -1,5 +1,4 @@
 apply from: "$rootDir/plugins/kotlin-android.gradle"
-apply from: "$rootDir/plugins/android-test.gradle"
 apply from: "$rootDir/plugins/kotlin-test.gradle"
 
 android {
@@ -13,5 +12,4 @@ dependencies {
   implementation(libs.coroutines.core)
 
   testImplementation project(":core:test")
-  androidTestImplementation project(":core:test")
 }

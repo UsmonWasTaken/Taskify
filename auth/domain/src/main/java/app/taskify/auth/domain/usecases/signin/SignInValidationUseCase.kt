@@ -15,8 +15,8 @@
 
 package app.taskify.auth.domain.usecases.signin
 
-import app.taskify.auth.domain.R
-import app.taskify.core.domain.Text
+import app.taskify.auth.domain.usecases.signin.SignInValidationResult.EmailError
+import app.taskify.auth.domain.usecases.signin.SignInValidationResult.PasswordError
 import app.taskify.core.domain.matcher.EmailMatcher
 import javax.inject.Inject
 
@@ -24,22 +24,20 @@ class SignInValidationUseCase @Inject constructor(
   private val emailMatcher: EmailMatcher,
 ) {
 
-  operator fun invoke(email: String, password: String): SignInValidationResult? {
+  operator fun invoke(email: String, password: String): SignInValidationResult {
     val emailError = getEmailError(email)
     val passwordError = getPasswordError(password)
-    return SignInValidationResult(emailError, passwordError).takeIf {
-      emailError != null || passwordError != null
-    }
+    return SignInValidationResult(emailError, passwordError)
   }
 
-  private fun getEmailError(email: String): Text? = when {
-    email.isEmpty() -> Text(R.string.empty_email)
-    !emailMatcher.matches(email) -> Text(R.string.invalid_email)
+  private fun getEmailError(email: String): EmailError? = when {
+    email.isEmpty() -> EmailError.Empty
+    !emailMatcher.matches(email) -> EmailError.Invalid
     else -> null
   }
 
-  private fun getPasswordError(password: String): Text? = when {
-    password.isEmpty() -> Text(R.string.empty_password)
+  private fun getPasswordError(password: String): PasswordError? = when {
+    password.isEmpty() -> PasswordError.Empty
     else -> null
   }
 }

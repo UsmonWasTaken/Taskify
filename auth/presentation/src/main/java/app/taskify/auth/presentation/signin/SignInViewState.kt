@@ -53,8 +53,8 @@ inline fun StateFlow<SignInViewState>.viewStateWithUpdatedPassword(
 inline fun StateFlow<SignInViewState>.viewStateWithValidationErrors(
   validationResult: SignInValidationResult,
 ): SignInViewState = value.copy(
-  emailError = validationResult.emailError,
-  passwordError = validationResult.passwordError,
+  emailError = validationResult.emailError?.description,
+  passwordError = validationResult.passwordError?.description,
 )
 
 inline fun StateFlow<SignInViewState>.viewStateWithLoading(

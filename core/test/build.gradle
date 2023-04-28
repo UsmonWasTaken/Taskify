@@ -8,6 +8,8 @@ android {
 dependencies {
   implementation project(":core:domain")
 
+  implementation(libs.junit)
   implementation(libs.mockk)
   implementation(libs.coroutines.core)
+  implementation(libs.coroutines.test)
 }
