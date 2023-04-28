@@ -95,8 +95,8 @@ class SignInViewModelTest {
 
     viewModelRobot
       .buildViewModel()
-      .mockSignInValidationResultForEmailAndPassword(emptyEmail, password, emptyEmailValidationResult)
-      .mockSignInValidationResultForEmailAndPassword(invalidEmail, password, invalidEmailValidationResult)
+      .mockSignInValidationResultForCredentials(emptyEmail, password, emptyEmailValidationResult)
+      .mockSignInValidationResultForCredentials(invalidEmail, password, invalidEmailValidationResult)
       .assertViewStates(
         initialViewState,
         passwordEnteredViewState,
@@ -128,7 +128,7 @@ class SignInViewModelTest {
 
     viewModelRobot
       .buildViewModel()
-      .mockSignInValidationResultForEmailAndPassword(email, emptyPassword, emptyPasswordValidationResult)
+      .mockSignInValidationResultForCredentials(email, emptyPassword, emptyPasswordValidationResult)
       .assertViewStates(
         initialViewState,
         emailEnteredViewState,
@@ -169,21 +169,21 @@ class SignInViewModelTest {
       .buildViewModel()
       .enterEmail(email)
       .enterPassword(password)
-      .mockSignInValidationResultForEmailAndPassword(email, password, inputValidationResult)
+      .mockSignInValidationResultForCredentials(email, password, inputValidationResult)
       // Mock for Network error
-      .mockSignInResultForEmailAndPassword(email, password, noNetworkSignInResult)
+      .mockSignInResultForCredentials(email, password, noNetworkSignInResult)
       .assertMessages(
         SignInResult.Failure.NoNetworkConnection.description,
       ) { clickSignIn() }
       .assertViewState(expectedViewStateAfterFailure)
       // Mock for invalid credentials error
-      .mockSignInResultForEmailAndPassword(email, password, invalidCredentialsSignInResult)
+      .mockSignInResultForCredentials(email, password, invalidCredentialsSignInResult)
       .assertMessages(
         SignInResult.Failure.InvalidCredentials.description,
       ) { clickSignIn() }
       .assertViewState(expectedViewStateAfterFailure)
       // Mock for unexpected error
-      .mockSignInResultForEmailAndPassword(email, password, unexpectedErrorSignInResult)
+      .mockSignInResultForCredentials(email, password, unexpectedErrorSignInResult)
       .assertMessages(
         Text(unexpectedExceptionMessage),
       ) { clickSignIn() }
@@ -210,8 +210,8 @@ class SignInViewModelTest {
       .buildViewModel()
       .enterEmail(email)
       .enterPassword(password)
-      .mockSignInValidationResultForEmailAndPassword(email, password, inputValidationResult)
-      .mockSignInResultForEmailAndPassword(email, password, *signInResults)
+      .mockSignInValidationResultForCredentials(email, password, inputValidationResult)
+      .mockSignInResultForCredentials(email, password, *signInResults)
       .assertViewStates(
         initialViewState,
         authenticatingViewState,
@@ -232,8 +232,8 @@ class SignInViewModelTest {
       .buildViewModel()
       .enterEmail(email)
       .enterPassword(password)
-      .mockSignInValidationResultForEmailAndPassword(email, password, inputValidationResult)
-      .mockSignInResultForEmailAndPassword(email, password, signInResult)
+      .mockSignInValidationResultForCredentials(email, password, inputValidationResult)
+      .mockSignInResultForCredentials(email, password, signInResult)
       .assertNavigationEvents(NavigateToMain) {
         clickSignIn()
       }

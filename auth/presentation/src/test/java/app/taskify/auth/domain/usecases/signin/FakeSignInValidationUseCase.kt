@@ -23,7 +23,7 @@ class FakeSignInValidationUseCase {
 
   val mock: SignInValidationUseCase = mockk()
 
-  fun mockValidationResultForEmailAndPassword(
+  fun mockValidationResultForCredentials(
     email: String,
     password: String,
     validationResult: SignInValidationResult,

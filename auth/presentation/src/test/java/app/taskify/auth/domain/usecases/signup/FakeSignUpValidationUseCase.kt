@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.auth.domain.usecases.signin
+package app.taskify.auth.domain.usecases.signup
 
-import app.taskify.auth.domain.repository.SignInResult
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.flow.flowOf
 
-class FakeSignInUseCase {
+class FakeSignUpValidationUseCase {
 
-  val mock: SignInUseCase = mockk()
+  val mock: SignUpValidationUseCase = mockk()
 
-  fun mockSignInResultForCredentials(
+  fun mockValidationResultForCredentials(
+    displayName: String,
     email: String,
     password: String,
-    vararg signInResult: SignInResult,
+    validationResult: SignUpValidationResult,
   ) {
-    every { mock(email, password) } returns flowOf(*signInResult)
+    every { mock(displayName, email, password) } returns validationResult
   }
 
   fun verifyUseCaseNeverCalled() {
-    verify(exactly = 0) { mock(any(), any()) }
+    verify(exactly = 0) { mock(any(), any(), any()) }
   }
 }

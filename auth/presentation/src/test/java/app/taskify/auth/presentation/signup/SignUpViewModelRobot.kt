@@ -13,37 +13,41 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.auth.presentation.signin
+package app.taskify.auth.presentation.signup
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import app.taskify.auth.domain.repository.SignInResult
-import app.taskify.auth.domain.usecases.signin.FakeSignInUseCase
-import app.taskify.auth.domain.usecases.signin.FakeSignInValidationUseCase
-import app.taskify.auth.domain.usecases.signin.SignInValidationResult
+import app.taskify.auth.domain.repository.SignUpResult
+import app.taskify.auth.domain.usecases.signup.FakeSignUpUseCase
+import app.taskify.auth.domain.usecases.signup.FakeSignUpValidationUseCase
+import app.taskify.auth.domain.usecases.signup.SignUpValidationResult
 import app.taskify.core.domain.Text
 import com.google.common.truth.Truth.assertThat
 
-class SignInViewModelRobot {
+class SignUpViewModelRobot {
 
-  private lateinit var fakeSignInValidationUseCase: FakeSignInValidationUseCase
-  private lateinit var fakeSignInUseCase: FakeSignInUseCase
+  private lateinit var fakeSignUpValidationUseCase: FakeSignUpValidationUseCase
+  private lateinit var fakeSignUpUseCase: FakeSignUpUseCase
   private lateinit var savedStateHandle: SavedStateHandle
 
-  private lateinit var viewModel: SignInViewModel
+  private lateinit var viewModel: SignUpViewModel
 
   fun buildViewModel() = apply {
-    fakeSignInValidationUseCase = FakeSignInValidationUseCase()
-    fakeSignInUseCase = FakeSignInUseCase()
+    fakeSignUpValidationUseCase = FakeSignUpValidationUseCase()
+    fakeSignUpUseCase = FakeSignUpUseCase()
     savedStateHandle = SavedStateHandle()
-    viewModel = SignInViewModel(
-      signInValidationUseCase = fakeSignInValidationUseCase.mock,
-      signInUseCase = fakeSignInUseCase.mock,
+    viewModel = SignUpViewModel(
+      signUpValidationUseCase = fakeSignUpValidationUseCase.mock,
+      signUpUseCase = fakeSignUpUseCase.mock,
       savedStateHandle = savedStateHandle,
     )
   }
 
   /* View Model Events */
+
+  fun enterDisplayName(displayName: CharSequence) = apply {
+    viewModel.onDisplayNameChanged(displayName)
+  }
 
   fun enterEmail(email: CharSequence) = apply {
     viewModel.onEmailChanged(email)
@@ -63,13 +67,13 @@ class SignInViewModelRobot {
 
   /* Assertions */
 
-  fun assertViewState(expectedViewState: SignInViewState) = apply {
+  fun assertViewState(expectedViewState: SignUpViewState) = apply {
     assertThat(viewModel.viewState.value).isEqualTo(expectedViewState)
   }
 
   suspend fun assertViewStates(
-    vararg expectedViewStates: SignInViewState,
-    action: suspend SignInViewModelRobot.() -> Unit,
+    vararg expectedViewStates: SignUpViewState,
+    action: suspend SignUpViewModelRobot.() -> Unit,
   ) = apply {
     viewModel.viewState.test {
       action()
@@ -81,8 +85,8 @@ class SignInViewModelRobot {
   }
 
   suspend fun assertNavigationEvents(
-    vararg expectedNavigationEvents: SignInNavigationEvent,
-    action: suspend SignInViewModelRobot.() -> Unit,
+    vararg expectedNavigationEvents: SignUpNavigationEvent,
+    action: suspend SignUpViewModelRobot.() -> Unit,
   ) = apply {
     viewModel.navigationFlow.test {
       action()
@@ -95,7 +99,7 @@ class SignInViewModelRobot {
 
   suspend fun assertMessages(
     vararg expectedMessages: Text,
-    action: suspend SignInViewModelRobot.() -> Unit,
+    action: suspend SignUpViewModelRobot.() -> Unit,
   ) = apply {
     viewModel.messageFlow.test {
       action()
@@ -108,29 +112,31 @@ class SignInViewModelRobot {
 
   /* Preparing dependencies */
 
-  fun mockSignInValidationResultForCredentials(
+  fun mockSignUpValidationResultForCredentials(
+    displayName: String,
     email: String,
     password: String,
-    validationResult: SignInValidationResult,
+    validationResult: SignUpValidationResult,
   ) = apply {
-    fakeSignInValidationUseCase.mockValidationResultForCredentials(email, password, validationResult)
+    fakeSignUpValidationUseCase.mockValidationResultForCredentials(displayName, email, password, validationResult)
   }
 
-  fun mockSignInResultForCredentials(
+  fun mockSignUpResultForCredentials(
+    displayName: String,
     email: String,
     password: String,
-    vararg signInResult: SignInResult,
+    vararg signUpResult: SignUpResult,
   ) = apply {
-    fakeSignInUseCase.mockSignInResultForCredentials(email, password, *signInResult)
+    fakeSignUpUseCase.mockSignUpResultForCredentials(displayName, email, password, *signUpResult)
   }
 
   /* Call verifications */
 
-  fun verifySignInUseCaseNeverCalled() = apply {
-    fakeSignInUseCase.verifyUseCaseNeverCalled()
+  fun verifySignUpUseCaseNeverCalled() = apply {
+    fakeSignUpUseCase.verifyUseCaseNeverCalled()
   }
 
-  fun verifySignInVerificationUseCaseNeverCalled() = apply {
-    fakeSignInValidationUseCase.verifyUseCaseNeverCalled()
+  fun verifySignUpVerificationUseCaseNeverCalled() = apply {
+    fakeSignUpValidationUseCase.verifyUseCaseNeverCalled()
   }
 }
