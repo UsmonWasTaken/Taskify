@@ -21,3 +21,4 @@ include ':core:presentation'
 include ':core:test'
 
 include ':auth:domain'
+include ':auth:presentation'
