@@ -95,7 +95,7 @@ class SignInViewModel @Inject constructor(
       }
 
       Authenticated -> {
-        savedStateHandle[VIEW_STATE] = SignInViewState()
+        savedStateHandle[VIEW_STATE] = SignInViewState(loadingText = signInResult.description)
         navigationChannel.trySend(NavigateToMain)
       }
 
