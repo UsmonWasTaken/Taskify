@@ -226,7 +226,7 @@ class SignInViewModelTest {
 
     val inputValidationResult = SignInValidationResult(emailError = null, passwordError = null)
     val signInResult = Authenticated
-    val viewStateAfterAuthenticated = SignInViewState()
+    val viewStateAfterAuthenticated = SignInViewState(loadingText = Authenticated.description)
 
     viewModelRobot
       .buildViewModel()
