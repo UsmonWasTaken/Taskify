@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2023 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <data>
+
+    <variable
+      name="viewModel"
+      type="app.taskify.auth.presentation.signin.SignInViewModel" />
+  </data>
+
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@+id/sign_in_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:theme="@style/Theme.Taskify">
+
+    <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:fillViewport="true">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+          android:id="@+id/start"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          app:layout_constraintGuide_percent="0.065" />
+
+        <androidx.constraintlayout.widget.Guideline
+          android:id="@+id/end"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          app:layout_constraintGuide_percent="0.935" />
+
+
+        <TextView
+          android:id="@+id/_sign_in_title"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="50dp"
+          android:gravity="center"
+          android:text="@string/sign_in_title"
+          android:textSize="32sp"
+          android:textStyle="bold"
+          app:layout_constraintBottom_toTopOf="@id/_sign_in_your_account"
+          app:layout_constraintEnd_toEndOf="@id/end"
+          app:layout_constraintStart_toStartOf="@id/start"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintVertical_chainStyle="packed" />
+
+
+        <TextView
+          android:id="@+id/_sign_in_your_account"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginVertical="10dp"
+          android:gravity="center"
+          android:text="@string/sign_in_your_profile"
+          android:textSize="18sp"
+          app:layout_constraintBottom_toTopOf="@id/email_til"
+          app:layout_constraintEnd_toEndOf="@id/end"
+          app:layout_constraintStart_toStartOf="@id/start"
+          app:layout_constraintTop_toBottomOf="@id/_sign_in_title" />
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/email_til"
+          style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:hint="@string/email_address"
+          app:layout_constraintBottom_toTopOf="@id/password_til"
+          app:layout_constraintEnd_toEndOf="@id/end"
+          app:layout_constraintStart_toStartOf="@id/start"
+          app:layout_constraintTop_toBottomOf="@id/_sign_in_your_account"
+          app:startIconDrawable="@drawable/ic_mail_24"
+          error="@{viewModel.viewState.emailError}">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email_et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autofillHints="emailAddress"
+            android:imeOptions="flagNoExtractUi|actionNext"
+            android:importantForAutofill="yes"
+            android:inputType="textEmailAddress"
+            android:onTextChanged="@{(chars, s, b, c) -> viewModel.onEmailChanged(chars)}"
+            android:text="@{viewModel.viewState.email}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/password_til"
+          style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:hint="@string/password"
+          app:layout_constraintBottom_toTopOf="@id/sign_up_btn"
+          app:layout_constraintEnd_toEndOf="@id/end"
+          app:layout_constraintStart_toStartOf="@id/start"
+          app:layout_constraintTop_toBottomOf="@id/email_til"
+          app:passwordToggleEnabled="true"
+          app:startIconDrawable="@drawable/ic_lock_24"
+          error="@{viewModel.viewState.passwordError}">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autofillHints="password"
+            android:imeOptions="flagNoExtractUi|actionDone"
+            android:importantForAutofill="yes"
+            android:inputType="textPassword"
+            android:onTextChanged="@{(chars, s, b, c) -> viewModel.onPasswordChanged(chars.toString())}"
+            android:text="@{viewModel.viewState.password}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/sign_up_btn"
+          style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="5dp"
+          android:layout_marginVertical="20dp"
+          android:onClick="@{(v) -> viewModel.onSignUpClicked()}"
+          android:paddingVertical="12dp"
+          android:text="@string/sign_up"
+          android:textAllCaps="false"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toStartOf="@id/sign_in_btn"
+          app:layout_constraintStart_toStartOf="@id/start"
+          app:layout_constraintTop_toBottomOf="@id/password_til"
+          app:cornerRadius="6dp" />
+
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/sign_in_btn"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="5dp"
+          android:onClick="@{(v) -> viewModel.onSignInClicked()}"
+          android:paddingVertical="12dp"
+          android:text="@string/sign_in"
+          android:textAllCaps="false"
+          app:layout_constraintBottom_toBottomOf="@id/sign_up_btn"
+          app:layout_constraintEnd_toEndOf="@id/end"
+          app:layout_constraintStart_toEndOf="@id/sign_up_btn"
+          app:layout_constraintTop_toTopOf="@id/sign_up_btn"
+          app:cornerRadius="6dp" />
+
+        <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:clickable="true"
+          android:focusable="true"
+          android:translationZ="10dp"
+          isVisible="@{viewModel.viewState.loading}"
+          tools:theme="@style/Theme.Taskify"
+          tools:visibility="gone">
+
+          <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.75"
+            android:background="@android:color/black" />
+
+          <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ProgressBar
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" />
+
+            <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="20dp"
+              android:textColor="@android:color/white"
+              text="@{viewModel.viewState.loadingText}"
+              tools:text="@string/retrieving_profile" />
+          </LinearLayout>
+        </FrameLayout>
+      </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
