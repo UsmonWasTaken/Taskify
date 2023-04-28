@@ -108,20 +108,20 @@ class SignInViewModelRobot {
 
   /* Preparing dependencies */
 
-  fun mockSignInValidationResultForEmailAndPassword(
+  fun mockSignInValidationResultForCredentials(
     email: String,
     password: String,
     validationResult: SignInValidationResult,
   ) = apply {
-    fakeSignInValidationUseCase.mockValidationResultForEmailAndPassword(email, password, validationResult)
+    fakeSignInValidationUseCase.mockValidationResultForCredentials(email, password, validationResult)
   }
 
-  fun mockSignInResultForEmailAndPassword(
+  fun mockSignInResultForCredentials(
     email: String,
     password: String,
     vararg signInResult: SignInResult,
   ) = apply {
-    fakeSignInUseCase.mockSignInResultResultForEmailAndPassword(email, password, *signInResult)
+    fakeSignInUseCase.mockSignInResultForCredentials(email, password, *signInResult)
   }
 
   /* Call verifications */
