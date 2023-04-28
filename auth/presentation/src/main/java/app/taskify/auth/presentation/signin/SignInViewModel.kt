@@ -76,7 +76,7 @@ class SignInViewModel @Inject constructor(
     val password = viewState.value.password
 
     val validationResult = signInValidationUseCase(email, password)
-    if (validationResult != null) {
+    if (!validationResult.areInputsValid) {
       savedStateHandle[VIEW_STATE] = viewState.viewStateWithValidationErrors(validationResult)
       return
     }
