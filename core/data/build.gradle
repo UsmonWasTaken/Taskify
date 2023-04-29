@@ -1,0 +1,10 @@
+apply from: "$rootDir/plugins/kotlin-android.gradle"
+apply from: "$rootDir/plugins/hilt-android.gradle"
+
+android {
+  namespace "app.taskify.core.data"
+}
+
+dependencies {
+  implementation project(":core:domain")
+}
