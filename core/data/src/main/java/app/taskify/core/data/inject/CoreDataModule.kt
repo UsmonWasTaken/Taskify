@@ -16,8 +16,10 @@
 package app.taskify.core.data.inject
 
 import app.taskify.core.data.matcher.AndroidEmailMatcher
+import app.taskify.core.data.preferences.DataStoreOnboardingPreferences
 import app.taskify.core.data.preferences.DataStoreProfilePreferences
 import app.taskify.core.domain.matcher.EmailMatcher
+import app.taskify.core.domain.preferences.OnboardingPreferences
 import app.taskify.core.domain.preferences.ProfilePreferences
 import dagger.Binds
 import dagger.Module
@@ -34,4 +36,7 @@ interface CoreDataModule {
 
   @Binds
   fun bindProfilePreferences(target: DataStoreProfilePreferences): ProfilePreferences
+
+  @Binds
+  fun bindOnboardingPreferences(target: DataStoreOnboardingPreferences): OnboardingPreferences
 }
