@@ -15,11 +15,22 @@
 
 package app.taskify.core.domain.preferences
 
+import java.io.Serializable
 import kotlinx.coroutines.flow.Flow
 
-interface AuthPreferences {
+interface ProfilePreferences {
 
   val isAuthenticated: Flow<Boolean>
 
-  suspend fun setAuthenticated(isAuthenticated: Boolean)
+  val profile: Flow<Profile?>
+
+  suspend fun setProfile(displayName: String?, email: String?, userId: String?)
+
+  suspend fun setProfile(profile: Profile) = setProfile(profile.displayName, profile.email, profile.userId)
+
+  data class Profile(
+    val displayName: String?,
+    val email: String?,
+    val userId: String?,
+  ) : Serializable
 }

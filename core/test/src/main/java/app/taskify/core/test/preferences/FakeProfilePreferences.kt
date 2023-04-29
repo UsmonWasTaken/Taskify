@@ -15,22 +15,31 @@
 
 package app.taskify.core.test.preferences
 
-import app.taskify.core.domain.preferences.AuthPreferences
+import app.taskify.core.domain.preferences.ProfilePreferences
+import app.taskify.core.domain.preferences.ProfilePreferences.Profile
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 
 @Suppress("unused")
-class FakeAuthPreferences {
+class FakeProfilePreferences {
 
-  val mock: AuthPreferences = mockk(relaxUnitFun = true)
+  val mock: ProfilePreferences = mockk(relaxUnitFun = true)
 
   fun mockAuthenticatedForResult(result: Boolean) {
     every { mock.isAuthenticated } answers { flowOf(result) }
   }
 
+  fun mockProfileForResult(profile: Profile) {
+    every { mock.profile } answers { flowOf(profile) }
+  }
+
   fun verifyIsAuthenticatedNeverCalled() {
     verify(exactly = 0) { mock.isAuthenticated }
+  }
+
+  fun verifyProfileNeverCalled() {
+    verify(exactly = 0) { mock.profile }
   }
 }
