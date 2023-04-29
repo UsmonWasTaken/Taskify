@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package app.taskify.core.domain.preferences
+package app.taskify.core.data
 
-import kotlinx.coroutines.flow.Flow
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.Preferences.Key
 
-interface AuthPreferences {
+typealias PreferencesDataStore = DataStore<Preferences>
 
-  val isAuthenticated: Flow<Boolean>
-
-  suspend fun setAuthenticated(isAuthenticated: Boolean)
+@JvmSynthetic
+internal fun <T> MutablePreferences.setOrRemove(key: Key<T>, value: T?) {
+  if (value != null) set(key, value) else remove(key)
 }

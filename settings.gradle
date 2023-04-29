@@ -16,9 +16,8 @@ dependencyResolutionManagement {
 rootProject.name = "Taskify"
 include ':app'
 
-include ':core:domain'
-include ':core:presentation'
-include ':core:test'
+// Core modules
+include(':core:data', ':core:domain', ':core:presentation', ':core:test')
 
-include ':auth:domain'
-include ':auth:presentation'
+// Auth feature
+include(':auth:domain', ':auth:presentation')
