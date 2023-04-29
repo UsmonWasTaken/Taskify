@@ -20,13 +20,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProfilePreferences {
 
-  val isAuthenticated: Flow<Boolean>
-
   val profile: Flow<Profile?>
+
+  val isAuthenticated: Flow<Boolean>
 
   suspend fun setProfile(displayName: String?, email: String?, userId: String?)
 
-  suspend fun setProfile(profile: Profile) = setProfile(profile.displayName, profile.email, profile.userId)
+  suspend fun setProfile(profile: Profile?) = setProfile(profile?.displayName, profile?.email, profile?.userId)
 
   data class Profile(
     val displayName: String?,

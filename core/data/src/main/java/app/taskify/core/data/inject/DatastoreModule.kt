@@ -17,7 +17,7 @@ package app.taskify.core.data.inject
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
-import app.taskify.core.data.preferences.PreferencesDataStore
+import app.taskify.core.data.PreferencesDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

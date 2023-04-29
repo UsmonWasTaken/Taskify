@@ -16,7 +16,9 @@
 package app.taskify.core.data.inject
 
 import app.taskify.core.data.matcher.AndroidEmailMatcher
+import app.taskify.core.data.preferences.DataStoreProfilePreferences
 import app.taskify.core.domain.matcher.EmailMatcher
+import app.taskify.core.domain.preferences.ProfilePreferences
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -28,5 +30,8 @@ import dagger.hilt.components.SingletonComponent
 interface CoreDataModule {
 
   @Binds
-  fun AndroidEmailMatcher.bind(): EmailMatcher
+  fun bindEmailMatcher(target: AndroidEmailMatcher): EmailMatcher
+
+  @Binds
+  fun bindProfilePreferences(target: DataStoreProfilePreferences): ProfilePreferences
 }
