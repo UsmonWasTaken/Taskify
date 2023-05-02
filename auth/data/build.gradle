@@ -1,0 +1,10 @@
+apply from: "$rootDir/plugins/kotlin-android.gradle"
+
+android {
+  namespace 'app.taskify.auth.data'
+}
+
+dependencies {
+  implementation project(":auth:domain")
+  implementation(libs.javax.inject)
+}

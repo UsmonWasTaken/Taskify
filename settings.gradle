@@ -20,4 +20,4 @@ include ':app'
 include(':core:data', ':core:domain', ':core:presentation', ':core:test')
 
 // Auth feature
-include(':auth:domain', ':auth:presentation')
+include(':auth:data', ':auth:domain', ':auth:presentation')
