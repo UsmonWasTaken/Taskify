@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  unit_tests:
+  unit_test:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -46,7 +46,7 @@ jobs:
           path: '*/build/reports/tests'
 
   androidTest:
-    needs: unit_tests
+    needs: unit_test
     runs-on: macOS-latest # enables hardware acceleration in the virtual machine
     timeout-minutes: 60
 
