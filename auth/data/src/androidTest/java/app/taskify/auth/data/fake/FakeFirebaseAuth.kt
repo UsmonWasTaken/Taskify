@@ -28,18 +28,10 @@ class FakeFirebaseAuth {
     password: String,
     userId: String,
   ) {
-    every {
-      mock.signInWithEmailAndPassword(email, password).isComplete
-    } returns true
-    every {
-      mock.signInWithEmailAndPassword(email, password).exception
-    } returns null
-    every {
-      mock.signInWithEmailAndPassword(email, password).isCanceled
-    } returns false
-    every {
-      mock.signInWithEmailAndPassword(email, password).result.user?.uid
-    } answers { userId }
+    every { mock.signInWithEmailAndPassword(email, password).isComplete } returns true
+    every { mock.signInWithEmailAndPassword(email, password).exception } returns null
+    every { mock.signInWithEmailAndPassword(email, password).isCanceled } returns false
+    every { mock.signInWithEmailAndPassword(email, password).result.user?.uid } answers { userId }
   }
 
   fun throwWhenSignInCalledWithCredentials(
@@ -57,18 +49,10 @@ class FakeFirebaseAuth {
     password: String,
     userId: String,
   ) {
-    every {
-      mock.createUserWithEmailAndPassword(email, password).isComplete
-    } returns true
-    every {
-      mock.createUserWithEmailAndPassword(email, password).exception
-    } returns null
-    every {
-      mock.createUserWithEmailAndPassword(email, password).isCanceled
-    } returns false
-    every {
-      mock.createUserWithEmailAndPassword(email, password).result.user?.uid
-    } answers { userId }
+    every { mock.createUserWithEmailAndPassword(email, password).isComplete } returns true
+    every { mock.createUserWithEmailAndPassword(email, password).exception } returns null
+    every { mock.createUserWithEmailAndPassword(email, password).isCanceled } returns false
+    every { mock.createUserWithEmailAndPassword(email, password).result.user?.uid } answers { userId }
   }
 
   fun throwWhenSignUpCalledWithCredentials(
