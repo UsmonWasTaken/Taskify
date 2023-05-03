@@ -49,10 +49,12 @@ if git.modified_files.empty? && git.added_files.empty? && git.deleted_files.empt
   fail "This PR has no changes at all, this is likely an issue during development."
 end
 
-functionalChanges = git.modified_files.include? "**/main/**/*.kt"
-testChanges = git.modified_files.include? "**/test/**/*.kt"
-androidTestChanges = git.modified_files.include? "**/androidTest/**/*.kt"
-docsChanges = git.modified_files.include? "*.md"
+fileChanges = (git.added_files + git.modified_files + git.deleted_files)
+
+functionalChanges = fileChanges.include? "**/main/**/*.kt"
+testChanges = fileChanges.include? "**/test/**/*.kt"
+androidTestChanges = fileChanges.include? "**/androidTest/**/*.kt"
+docsChanges = fileChanges.include? "*.md"
 
 # Warn when the application source code has been modified, but the test sources have not.
 if functionalChanges && !(testChanges || androidTestChanges)

@@ -18,10 +18,10 @@ package app.taskify.core.domain.util
 import java.util.concurrent.CancellationException
 
 @Suppress("TooGenericExceptionCaught")
-inline fun <T> resultOf(block: () -> T): Result<T> = try {
+inline fun <T> resultOf(block: () -> T, onFailure: (Throwable) -> Throwable = { it }): Result<T> = try {
   Result.success(block())
 } catch (cancellationException: CancellationException) {
   throw cancellationException
 } catch (throwable: Throwable) {
-  Result.failure(throwable)
+  Result.failure(onFailure(throwable))
 }

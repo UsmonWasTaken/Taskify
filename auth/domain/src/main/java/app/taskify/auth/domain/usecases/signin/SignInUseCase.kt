@@ -50,7 +50,7 @@ class SignInUseCase @Inject constructor(
     emit(Authenticated)
   }
 
-  // TODO: Handle all of the possible auth and profile exceptions here.
+  // Handle all of the possible auth and profile exceptions here.
   private fun Throwable.toFailureSignInResult(): SignInResult.Failure = when (this) {
     is NetworkException -> NoNetworkConnection
     is InvalidCredentialsException -> InvalidCredentials

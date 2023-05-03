@@ -55,3 +55,6 @@ captures/
 
 # Do not commit firebase config
 google-services.json
+
+# To tun Danger locally, Do not commit.
+/Gemfile.lock
