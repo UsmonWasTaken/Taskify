@@ -63,7 +63,7 @@ end
 
 # Thank when the documentation changes
 if docsChanges
-  message "Thank you for making documentation better :heart:!"
+  message "Thank you for making documentation better! :heart:"
 end
 
 # Notify when we have outdated dependencies.
