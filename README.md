@@ -1,8 +1,11 @@
 # Taskify
 
 [![Android Build](https://github.com/usdaves/Taskify/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/usdaves/Taskify/actions/workflows/build.yaml)
+[![Unit and Integration tests](https://github.com/usdaves/Taskify/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/usdaves/Taskify/actions/workflows/tests.yml)
 
-More information coming soon…
+**Taskify** is an open-source to do lists and reminders application built for Android devices.
+
+*More information coming soon…*
 
 # License
 
