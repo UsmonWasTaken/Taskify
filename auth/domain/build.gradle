@@ -7,6 +7,7 @@ android {
 
 dependencies {
   implementation project(":core:domain")
+  implementation project(":profile:domain")
 
   implementation(libs.javax.inject)
   implementation(libs.coroutines.core)
