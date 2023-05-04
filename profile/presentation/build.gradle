@@ -1,0 +1,24 @@
+apply from: "$rootDir/plugins/kotlin-android.gradle"
+apply plugin: "org.jetbrains.kotlin.plugin.parcelize"
+apply from: "$rootDir/plugins/kotlin-test.gradle"
+apply from: "$rootDir/plugins/android-test.gradle"
+apply from: "$rootDir/plugins/hilt-android.gradle"
+
+android {
+  namespace 'app.taskify.profile.presentation'
+
+  buildFeatures {
+    dataBinding true
+  }
+}
+
+dependencies {
+  implementation project(":core:domain")
+  implementation project(":core:presentation")
+  implementation project(":profile:domain")
+
+  implementation(libs.material)
+  implementation(libs.fragment)
+
+  implementation(libs.coroutines.core)
+}
