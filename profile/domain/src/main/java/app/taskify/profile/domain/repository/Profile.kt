@@ -15,19 +15,10 @@
 
 package app.taskify.profile.domain.repository
 
-import kotlinx.coroutines.flow.Flow
+import java.io.Serializable
 
-interface ProfileRepository {
-
-  val profile: Flow<Profile?>
-
-  suspend fun retrieveProfile(userId: String): Result<Unit>
-
-  suspend fun setupProfile(
-    displayName: String,
-    email: String,
-    userId: String,
-  ): Result<Unit>
-
-  suspend fun signOut()
-}
+data class Profile(
+  val displayName: String?,
+  val email: String?,
+  val userId: String?,
+) : Serializable

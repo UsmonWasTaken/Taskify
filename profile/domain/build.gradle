@@ -3,3 +3,7 @@ apply from: "$rootDir/plugins/kotlin-android.gradle"
 android {
   namespace "app.taskify.profile.domain"
 }
+
+dependencies {
+  implementation(libs.coroutines.core)
+}
