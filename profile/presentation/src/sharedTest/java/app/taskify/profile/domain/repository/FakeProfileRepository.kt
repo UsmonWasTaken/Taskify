@@ -15,15 +15,39 @@
 
 package app.taskify.profile.domain.repository
 
-interface ProfileRepository {
+import io.mockk.coEvery
+import io.mockk.mockk
+import io.mockk.verify
 
-  suspend fun retrieveProfile(userId: String): Result<Unit>
+class FakeProfileRepository {
 
-  suspend fun setupProfile(
+  val mock: ProfileRepository = mockk(relaxUnitFun = true)
+
+  fun mockRetrieveProfileResultForUserId(
+    userId: String,
+    result: Result<Unit>,
+  ) {
+    coEvery {
+      mock.retrieveProfile(userId)
+    } returns result
+  }
+
+  fun mockSetupProfileForCredentials(
     displayName: String,
     email: String,
     userId: String,
-  ): Result<Unit>
+    result: Result<Unit>,
+  ) {
+    coEvery {
+      mock.setupProfile(displayName, email, userId)
+    } returns result
+  }
 
-  fun signOut()
+  fun verifySignOutCalledOnce() {
+    verify(exactly = 1) { mock.signOut() }
+  }
+
+  fun verifySignOutNeverCalled() {
+    verify(exactly = 0) { mock.signOut() }
+  }
 }
