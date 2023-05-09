@@ -24,7 +24,7 @@ import app.taskify.auth.domain.usecases.signin.SignInValidationResult.EmailError
 import app.taskify.auth.domain.usecases.signin.SignInValidationResult.PasswordError
 import app.taskify.auth.presentation.signin.SignInNavigationEvent.NavigateToMain
 import app.taskify.core.domain.Text
-import app.taskify.core.test.CoroutinesTestScopeRule
+import app.taskify.core.test.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -35,7 +35,7 @@ import org.junit.Test
 class SignInViewModelTest {
 
   @get:Rule
-  val coroutineTestScopeRule = CoroutinesTestScopeRule()
+  val mainDispatcherRule = MainDispatcherRule()
 
   private lateinit var viewModelRobot: SignInViewModelRobot
 
