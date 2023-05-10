@@ -19,6 +19,7 @@ import app.taskify.auth.domain.repository.AuthRepository
 import app.taskify.auth.domain.repository.SignInResult
 import app.taskify.auth.domain.repository.SignInResult.Authenticated
 import app.taskify.auth.domain.repository.SignInResult.Authenticating
+import app.taskify.auth.domain.repository.SignInResult.Failure
 import app.taskify.auth.domain.repository.SignInResult.Failure.InvalidCredentials
 import app.taskify.auth.domain.repository.SignInResult.Failure.NoNetworkConnection
 import app.taskify.auth.domain.repository.SignInResult.Failure.Unknown
@@ -30,12 +31,12 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class SignInUseCase @Inject constructor(
+class ProdSignInUseCase @Inject constructor(
   private val authRepository: AuthRepository,
   private val profileRepository: ProfileRepository,
-) {
+) : SignInUseCase {
 
-  operator fun invoke(email: String, password: String): Flow<SignInResult> = flow {
+  override fun invoke(email: String, password: String): Flow<SignInResult> = flow {
     emit(Authenticating)
     val authResult = authRepository.signIn(email, password)
     val userId = authResult.getOrElse { throwable ->
@@ -51,9 +52,14 @@ class SignInUseCase @Inject constructor(
   }
 
   // Handle all of the possible auth and profile exceptions here.
-  private fun Throwable.toFailureSignInResult(): SignInResult.Failure = when (this) {
+  private fun Throwable.toFailureSignInResult(): Failure = when (this) {
     is NetworkException -> NoNetworkConnection
     is InvalidCredentialsException -> InvalidCredentials
     else -> Unknown(this)
   }
+}
+
+// This abstraction is created only to create fake implementations
+interface SignInUseCase {
+  operator fun invoke(email: String, password: String): Flow<SignInResult>
 }
