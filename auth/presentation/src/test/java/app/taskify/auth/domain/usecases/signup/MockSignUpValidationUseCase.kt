@@ -19,7 +19,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class FakeSignUpValidationUseCase {
+class MockSignUpValidationUseCase {
 
   val mock: SignUpValidationUseCase = mockk()
 

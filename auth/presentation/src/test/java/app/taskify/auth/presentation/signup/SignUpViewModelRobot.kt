@@ -19,26 +19,26 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import app.taskify.auth.domain.repository.SignUpResult
 import app.taskify.auth.domain.usecases.signup.FakeSignUpUseCase
-import app.taskify.auth.domain.usecases.signup.FakeSignUpValidationUseCase
+import app.taskify.auth.domain.usecases.signup.MockSignUpValidationUseCase
 import app.taskify.auth.domain.usecases.signup.SignUpValidationResult
 import app.taskify.core.domain.Text
 import com.google.common.truth.Truth.assertThat
 
 class SignUpViewModelRobot {
 
-  private lateinit var fakeSignUpValidationUseCase: FakeSignUpValidationUseCase
+  private lateinit var mockSignUpValidationUseCase: MockSignUpValidationUseCase
   private lateinit var fakeSignUpUseCase: FakeSignUpUseCase
   private lateinit var savedStateHandle: SavedStateHandle
 
   private lateinit var viewModel: SignUpViewModel
 
   fun buildViewModel() = apply {
-    fakeSignUpValidationUseCase = FakeSignUpValidationUseCase()
+    mockSignUpValidationUseCase = MockSignUpValidationUseCase()
     fakeSignUpUseCase = FakeSignUpUseCase()
     savedStateHandle = SavedStateHandle()
     viewModel = SignUpViewModel(
-      signUpValidationUseCase = fakeSignUpValidationUseCase.mock,
-      signUpUseCase = fakeSignUpUseCase.mock,
+      signUpValidationUseCase = mockSignUpValidationUseCase.mock,
+      signUpUseCase = fakeSignUpUseCase,
       savedStateHandle = savedStateHandle,
     )
   }
@@ -118,7 +118,7 @@ class SignUpViewModelRobot {
     password: String,
     validationResult: SignUpValidationResult,
   ) = apply {
-    fakeSignUpValidationUseCase.mockValidationResultForCredentials(displayName, email, password, validationResult)
+    mockSignUpValidationUseCase.mockValidationResultForCredentials(displayName, email, password, validationResult)
   }
 
   fun mockSignUpResultForCredentials(
@@ -127,16 +127,16 @@ class SignUpViewModelRobot {
     password: String,
     vararg signUpResult: SignUpResult,
   ) = apply {
-    fakeSignUpUseCase.mockSignUpResultForCredentials(displayName, email, password, *signUpResult)
+    TODO("Remove this function")
   }
 
   /* Call verifications */
 
   fun verifySignUpUseCaseNeverCalled() = apply {
-    fakeSignUpUseCase.verifyUseCaseNeverCalled()
+    fakeSignUpUseCase.verifyInvokeNeverCalled()
   }
 
   fun verifySignUpVerificationUseCaseNeverCalled() = apply {
-    fakeSignUpValidationUseCase.verifyUseCaseNeverCalled()
+    mockSignUpValidationUseCase.verifyUseCaseNeverCalled()
   }
 }
