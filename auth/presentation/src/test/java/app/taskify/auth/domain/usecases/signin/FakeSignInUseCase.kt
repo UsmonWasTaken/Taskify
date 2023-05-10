@@ -16,24 +16,25 @@
 package app.taskify.auth.domain.usecases.signin
 
 import app.taskify.auth.domain.repository.SignInResult
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 
-class FakeSignInUseCase {
+class FakeSignInUseCase : SignInUseCase {
 
-  val mock: SignInUseCase = mockk()
+  private var invokeCallCount = 0
 
-  fun mockSignInResultForCredentials(
-    email: String,
-    password: String,
-    vararg signInResult: SignInResult,
-  ) {
-    every { mock(email, password) } returns flowOf(*signInResult)
+  private val signInFlow = MutableSharedFlow<SignInResult>()
+
+  override fun invoke(email: String, password: String): Flow<SignInResult> = flow {
+    invokeCallCount++
+    emitAll(signInFlow)
   }
 
-  fun verifyUseCaseNeverCalled() {
-    verify(exactly = 0) { mock(any(), any()) }
+  suspend fun emit(result: SignInResult) = signInFlow.emit(result)
+
+  fun verifyInvokeNeverCalled() {
+    assert(invokeCallCount == 0) { "Invoke is called $invokeCallCount times." }
   }
 }

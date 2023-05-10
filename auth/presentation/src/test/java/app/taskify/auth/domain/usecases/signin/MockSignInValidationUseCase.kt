@@ -19,7 +19,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class FakeSignInValidationUseCase {
+class MockSignInValidationUseCase {
 
   val mock: SignInValidationUseCase = mockk()
 
@@ -31,7 +31,7 @@ class FakeSignInValidationUseCase {
     every { mock(email, password) } returns validationResult
   }
 
-  fun verifyUseCaseNeverCalled() {
+  fun verifyInvokeNeverCalled() {
     verify(exactly = 0) { mock(any(), any()) }
   }
 }
