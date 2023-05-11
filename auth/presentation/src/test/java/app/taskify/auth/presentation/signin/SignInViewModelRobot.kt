@@ -23,6 +23,7 @@ import app.taskify.auth.domain.usecases.signin.MockSignInValidationUseCase
 import app.taskify.auth.domain.usecases.signin.SignInValidationResult
 import app.taskify.core.domain.Text
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
 class SignInViewModelRobot {
@@ -33,6 +34,7 @@ class SignInViewModelRobot {
 
   private lateinit var viewModel: SignInViewModel
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   fun buildViewModel() = apply {
     mockSignInValidationUseCase = MockSignInValidationUseCase()
     fakeSignInUseCase = FakeSignInUseCase()
@@ -120,7 +122,7 @@ class SignInViewModelRobot {
     fakeSignInUseCase.verifyInvokeNeverCalled()
   }
 
-  fun verifySignInVerificationUseCaseNeverCalled() = apply {
+  fun verifySignInValidationUseCaseNeverCalled() = apply {
     mockSignInValidationUseCase.verifyInvokeNeverCalled()
   }
 }

@@ -23,9 +23,9 @@ import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase.Companion
 import app.taskify.core.domain.Text
 
 data class SignUpValidationResult(
-  val displayNameError: DisplayNameError?,
-  val emailError: EmailError?,
-  val passwordError: PasswordError?,
+  val displayNameError: DisplayNameError? = null,
+  val emailError: EmailError? = null,
+  val passwordError: PasswordError? = null,
 ) {
 
   inline val areInputsValid: Boolean

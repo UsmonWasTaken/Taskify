@@ -51,7 +51,7 @@ class SignInViewModelTest {
   fun `Sign in clicked with valid credentials, Successful sign in results collected`() = runTest {
     val email = defaultEmail
     val password = defaultPassword
-    val inputValidationResult = SignInValidationResult(emailError = null, passwordError = null)
+    val inputValidationResult = SignInValidationResult()
 
     viewModelRobot
       // Preparing
@@ -64,7 +64,7 @@ class SignInViewModelTest {
       .enterPassword(password)
       .assertViewState(SignInViewState(email = email, password = password))
       // Verifying the use cases never called yet
-      .verifySignInVerificationUseCaseNeverCalled()
+      .verifySignInValidationUseCaseNeverCalled()
       .verifySignInUseCaseNeverCalled()
       // Testing the successful sign in results
       .clickSignIn()
@@ -81,8 +81,8 @@ class SignInViewModelTest {
     val emptyEmail = ""
     val invalidEmail = "invalid"
     val password = defaultPassword
-    val emptyEmailInputValResult = SignInValidationResult(emailError = EmailError.Empty, passwordError = null)
-    val invalidEmailInputValResult = SignInValidationResult(emailError = EmailError.Invalid, passwordError = null)
+    val emptyEmailInputValResult = SignInValidationResult(emailError = EmailError.Empty)
+    val invalidEmailInputValResult = SignInValidationResult(emailError = EmailError.Invalid)
 
     viewModelRobot
       // Preparing
@@ -91,7 +91,7 @@ class SignInViewModelTest {
       .mockSignInValidationResultForCredentials(emptyEmail, password, emptyEmailInputValResult)
       .mockSignInValidationResultForCredentials(invalidEmail, password, invalidEmailInputValResult)
       // Verifying the validation use cases never called yet
-      .verifySignInVerificationUseCaseNeverCalled()
+      .verifySignInValidationUseCaseNeverCalled()
       // 1. Testing with empty email
       .enterEmail(emptyEmail)
       .assertViewState(SignInViewState(email = emptyEmail, password = password))
@@ -114,7 +114,7 @@ class SignInViewModelTest {
   fun `Submit with empty password`() {
     val email = defaultEmail
     val emptyPassword = ""
-    val emptyPasswordInputValResult = SignInValidationResult(emailError = null, passwordError = PasswordError.Empty)
+    val emptyPasswordInputValResult = SignInValidationResult(passwordError = PasswordError.Empty)
 
     viewModelRobot
       // Preparing
@@ -122,7 +122,7 @@ class SignInViewModelTest {
       .enterEmail(email)
       .mockSignInValidationResultForCredentials(email, emptyPassword, emptyPasswordInputValResult)
       // Verifying the use cases never called yet
-      .verifySignInVerificationUseCaseNeverCalled()
+      .verifySignInValidationUseCaseNeverCalled()
       // Testing with empty password
       .enterPassword(emptyPassword)
       .clickSignIn()
@@ -149,7 +149,7 @@ class SignInViewModelTest {
   fun `Network disconnected, Credentials was invalid, or Unexpected error occurred, Show an error message`() = runTest {
     val email = defaultEmail
     val password = defaultPassword
-    val inputValidationResult = SignInValidationResult(emailError = null, passwordError = null)
+    val inputValidationResult = SignInValidationResult()
     val unexpectedException = RuntimeException()
 
     viewModelRobot
@@ -158,7 +158,7 @@ class SignInViewModelTest {
       .enterEmail(email)
       .enterPassword(password)
       .mockSignInValidationResultForCredentials(email, password, inputValidationResult)
-      // 1. Network disconnected while authenticating
+      // 1. Network disconnected
       .assertMessages(
         expectedMessages = arrayOf(NoNetworkConnection.description),
         action = {
@@ -168,7 +168,7 @@ class SignInViewModelTest {
           }
         },
       )
-      // 2. Credentials was invalid while authenticating
+      // 2. Credentials was invalid
       .assertMessages(
         expectedMessages = arrayOf(InvalidCredentials.description),
         action = {
@@ -178,7 +178,7 @@ class SignInViewModelTest {
           }
         },
       )
-      // 3. Unexpected exception occurred while authenticating
+      // 3. Unexpected exception occurred
       .assertMessages(
         expectedMessages = arrayOf(Unknown(unexpectedException).description),
         action = {

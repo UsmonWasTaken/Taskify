@@ -15,9 +15,11 @@
 
 package app.taskify.auth.presentation.signup
 
-import app.taskify.auth.domain.repository.SignUpResult
 import app.taskify.auth.domain.repository.SignUpResult.Authenticated
 import app.taskify.auth.domain.repository.SignUpResult.Authenticating
+import app.taskify.auth.domain.repository.SignUpResult.Failure.EmailAlreadyInUse
+import app.taskify.auth.domain.repository.SignUpResult.Failure.NoNetworkConnection
+import app.taskify.auth.domain.repository.SignUpResult.Failure.Unknown
 import app.taskify.auth.domain.repository.SignUpResult.SettingUpProfile
 import app.taskify.auth.domain.usecases.signup.SignUpValidationResult
 import app.taskify.auth.domain.usecases.signup.SignUpValidationResult.DisplayNameError
@@ -27,16 +29,13 @@ import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase.Companion
 import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase.Companion.MAX_PASSWORD_LENGTH
 import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase.Companion.MIN_DISPLAY_NAME_LENGTH
 import app.taskify.auth.domain.usecases.signup.SignUpValidationUseCase.Companion.MIN_PASSWORD_LENGTH
-import app.taskify.auth.presentation.signup.SignUpNavigationEvent.NavigateToMain
-import app.taskify.core.domain.Text
 import app.taskify.core.test.MainDispatcherRule
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class SignUpViewModelTest {
 
   @get:Rule
@@ -54,155 +53,121 @@ class SignUpViewModelTest {
   }
 
   @Test
-  fun test_UpdateCredentials() = runTest {
+  fun `Submit with valid credentials, Authenticating, SettingUpProfile, and Authenticated SignUpResults`() = runTest {
     val displayName = defaultDisplayName
     val email = defaultEmail
     val password = defaultPassword
+    val inputValidationResult = SignUpValidationResult(displayNameError = null, emailError = null, passwordError = null)
 
-    val initialViewState = SignUpViewState()
-    val displayNameEnteredViewState = initialViewState.copy(displayName = displayName)
-    val emailEnteredViewState = displayNameEnteredViewState.copy(email = email)
-    val passwordEnteredViewState = emailEnteredViewState.copy(password = password)
+    val credentialsEnteredViewState = SignUpViewState(displayName = displayName, email = email, password = password)
+    val authenticatingViewState = credentialsEnteredViewState.copy(loadingText = Authenticating.description)
+    val settingUpProfileViewState = credentialsEnteredViewState.copy(loadingText = SettingUpProfile.description)
+    val authenticatedViewState = SignUpViewState(loadingText = Authenticated.description)
 
     viewModelRobot
+      // Preparing
       .buildViewModel()
-      .assertViewStates(
-        initialViewState,
-        displayNameEnteredViewState,
-        emailEnteredViewState,
-        passwordEnteredViewState,
-      ) {
-        enterDisplayName(displayName)
-        enterEmail(email)
-        enterPassword(password)
-      }
-      // Sign In use cases should not be called until SignIn button click
+      .mockSignUpValidationResultForCredentials(displayName, email, password, inputValidationResult)
+      // Validating the entered credentials
+      .assertViewState(SignUpViewState())
+      .enterDisplayName(displayName)
+      .enterEmail(email)
+      .enterPassword(password)
+      .assertViewState(credentialsEnteredViewState)
+      // Verifying the use cases never called yet
+      .verifySignUpValidationUseCaseNeverCalled()
       .verifySignUpUseCaseNeverCalled()
-      .verifySignUpVerificationUseCaseNeverCalled()
+      // Testing the successful sign in results
+      .clickSignUp()
+      .emitSignUpResult(Authenticating)
+      .assertViewState(authenticatingViewState)
+      .emitSignUpResult(SettingUpProfile)
+      .assertViewState(settingUpProfileViewState)
+      .emitSignUpResult(Authenticated)
+      .assertViewState(authenticatedViewState)
   }
 
   @Test
-  fun test_SubmitEmptyDisplayName_SubmitShortDisplayName_SubmitLongDisplayName() = runTest {
+  fun `Submit with empty, short, and long display names, Empty, TooShort, TooLong display name validation results`() {
     val emptyDisplayName = ""
     val shortDisplayName = "a".repeat(MIN_DISPLAY_NAME_LENGTH - 1)
     val longDisplayName = "a".repeat(MAX_DISPLAY_NAME_LENGTH + 1)
     val email = defaultEmail
     val password = defaultPassword
 
-    val initialViewState = SignUpViewState(displayName = emptyDisplayName, email = email, password = password)
+    val emptyDisplayNameValidationResult = SignUpValidationResult(displayNameError = DisplayNameError.Empty)
+    val shortDisplayNameValidationResult = SignUpValidationResult(displayNameError = DisplayNameError.TooShort)
+    val longDisplayNameValidationResult = SignUpValidationResult(displayNameError = DisplayNameError.TooLong)
 
-    val viewStateWithEmptyDisplayNameError = initialViewState.copy(
-      displayNameError = DisplayNameError.Empty.description,
-    )
-    val shortDisplayNameEnteredViewState = viewStateWithEmptyDisplayNameError.copy(
-      displayName = shortDisplayName,
-      displayNameError = null,
-    )
-    val viewStateWithShortDisplayNameError = shortDisplayNameEnteredViewState.copy(
-      displayNameError = DisplayNameError.TooShort.description,
-    )
-    val longDisplayNameEnteredViewState = viewStateWithShortDisplayNameError.copy(
-      displayName = longDisplayName,
-      displayNameError = null,
-    )
-    val viewStateWithLongDisplayNameError = longDisplayNameEnteredViewState.copy(
-      displayNameError = DisplayNameError.TooLong.description,
-    )
-
-    val emptyDisplayNameValidationResult = SignUpValidationResult(
-      displayNameError = DisplayNameError.Empty,
-      emailError = null,
-      passwordError = null,
-    )
-    val shortDisplayNameValidationResult = SignUpValidationResult(
-      displayNameError = DisplayNameError.TooShort,
-      emailError = null,
-      passwordError = null,
-    )
-    val longDisplayNameValidationResult = SignUpValidationResult(
-      displayNameError = DisplayNameError.TooLong,
-      emailError = null,
-      passwordError = null,
-    )
+    val initialViewState = SignUpViewState(email = email, password = password)
 
     viewModelRobot
+      // Preparing
       .buildViewModel()
       .enterEmail(email)
       .enterPassword(password)
       .mockSignUpValidationResultForCredentials(emptyDisplayName, email, password, emptyDisplayNameValidationResult)
       .mockSignUpValidationResultForCredentials(shortDisplayName, email, password, shortDisplayNameValidationResult)
       .mockSignUpValidationResultForCredentials(longDisplayName, email, password, longDisplayNameValidationResult)
-      .assertViewStates(
-        initialViewState,
-        viewStateWithEmptyDisplayNameError,
-        shortDisplayNameEnteredViewState,
-        viewStateWithShortDisplayNameError,
-        longDisplayNameEnteredViewState,
-        viewStateWithLongDisplayNameError,
-      ) {
-        enterDisplayName(emptyDisplayName)
-        clickSignUp()
-        enterDisplayName(shortDisplayName)
-        clickSignUp()
-        enterDisplayName(longDisplayName)
-        clickSignUp()
-      }
+      .assertViewState(initialViewState)
+      // 1. Test with empty display name
+      .enterDisplayName(emptyDisplayName)
+      .clickSignUp()
+      .assertViewState(
+        initialViewState.copy(displayNameError = DisplayNameError.Empty.description),
+      )
+      // 2. Test with too short display name
+      .enterDisplayName(shortDisplayName)
+      .clickSignUp()
+      .assertViewState(
+        initialViewState.copy(displayName = shortDisplayName, displayNameError = DisplayNameError.TooShort.description),
+      )
+      // 3. Test with too long display name
+      .enterDisplayName(longDisplayName)
+      .clickSignUp()
+      .assertViewState(
+        initialViewState.copy(displayName = longDisplayName, displayNameError = DisplayNameError.TooLong.description),
+      )
+      // Verifying the sign up use case never called
       .verifySignUpUseCaseNeverCalled()
   }
 
   @Test
-  fun test_SubmitEmptyEmail_SubmitInvalidEmail() = runTest {
+  fun `Submit with empty, and invalid emails, Empty, and Invalid email validation results`() = runTest {
     val displayName = defaultDisplayName
     val emptyEmail = ""
     val invalidEmail = "invalid"
     val password = defaultPassword
 
     val initialViewState = SignUpViewState(displayName = displayName, password = password)
+    val emptyEmailViewState = initialViewState.copy(email = emptyEmail, emailError = EmailError.Empty.description)
+    val invalidEmailViewState = initialViewState.copy(email = invalidEmail, emailError = EmailError.Invalid.description)
 
-    val viewStateWithEmptyEmailError = initialViewState.copy(
-      emailError = EmailError.Empty.description,
-    )
-    val emailEnteredViewState = viewStateWithEmptyEmailError.copy(
-      email = invalidEmail,
-      emailError = null,
-    )
-    val viewStateWithInvalidEmailError = emailEnteredViewState.copy(
-      emailError = EmailError.Invalid.description,
-    )
-
-    val emptyEmailValidationResult = SignUpValidationResult(
-      displayNameError = null,
-      emailError = EmailError.Empty,
-      passwordError = null,
-    )
-    val invalidEmailValidationResult = SignUpValidationResult(
-      displayNameError = null,
-      emailError = EmailError.Invalid,
-      passwordError = null,
-    )
+    val emptyEmailValidationResult = SignUpValidationResult(emailError = EmailError.Empty)
+    val invalidEmailValidationResult = SignUpValidationResult(emailError = EmailError.Invalid)
 
     viewModelRobot
+      // Preparing
       .buildViewModel()
       .enterDisplayName(displayName)
       .enterPassword(password)
       .mockSignUpValidationResultForCredentials(displayName, emptyEmail, password, emptyEmailValidationResult)
       .mockSignUpValidationResultForCredentials(displayName, invalidEmail, password, invalidEmailValidationResult)
-      .assertViewStates(
-        initialViewState,
-        viewStateWithEmptyEmailError,
-        emailEnteredViewState,
-        viewStateWithInvalidEmailError,
-      ) {
-        enterEmail(emptyEmail)
-        clickSignUp()
-        enterEmail(invalidEmail)
-        clickSignUp()
-      }
+      .assertViewState(initialViewState)
+      // 1. Test with empty email
+      .enterEmail(emptyEmail)
+      .clickSignUp()
+      .assertViewState(emptyEmailViewState)
+      // 2. Test with invalid email
+      .enterEmail(invalidEmail)
+      .clickSignUp()
+      .assertViewState(invalidEmailViewState)
+      // Verifying the sign up use case never called
       .verifySignUpUseCaseNeverCalled()
   }
 
   @Test
-  fun test_SubmitEmptyPassword_SubmitShortPassword_SubmitLongPassword() = runTest {
+  fun `Submit with empty, short, and long passwords, Empty, TooShort, TooLong password validation results`() = runTest {
     val displayName = defaultDisplayName
     val email = defaultEmail
     val emptyPassword = ""
@@ -210,89 +175,61 @@ class SignUpViewModelTest {
     val longPassword = "a".repeat(MAX_PASSWORD_LENGTH + 1)
 
     val initialViewState = SignUpViewState(displayName = displayName, email = email, password = emptyPassword)
+    val emptyPasswordViewState =
+      initialViewState.copy(password = emptyPassword, passwordError = PasswordError.Empty.description)
+    val shortPasswordViewState = initialViewState
+      .copy(password = shortPassword, passwordError = PasswordError.TooShort.description)
+    val longPasswordViewState = initialViewState
+      .copy(password = longPassword, passwordError = PasswordError.TooLong.description)
 
-    val viewStateWithEmptyPasswordError = initialViewState.copy(
-      passwordError = PasswordError.Empty.description,
-    )
-    val shortPasswordEnteredViewState = viewStateWithEmptyPasswordError.copy(
-      password = shortPassword,
-      passwordError = null,
-    )
-    val viewStateWithShortPasswordError = shortPasswordEnteredViewState.copy(
-      passwordError = PasswordError.TooShort.description,
-    )
-    val longPasswordEnteredViewState = viewStateWithShortPasswordError.copy(
-      password = longPassword,
-      passwordError = null,
-    )
-    val viewStateWithLongPasswordError = longPasswordEnteredViewState.copy(
-      passwordError = PasswordError.TooLong.description,
-    )
-
-    val emptyPasswordValidationResult = SignUpValidationResult(
-      displayNameError = null,
-      emailError = null,
-      passwordError = PasswordError.Empty,
-    )
-    val shortPasswordValidationResult = SignUpValidationResult(
-      displayNameError = null,
-      emailError = null,
-      passwordError = PasswordError.TooShort,
-    )
-    val longPasswordValidationResult = SignUpValidationResult(
-      displayNameError = null,
-      emailError = null,
-      passwordError = PasswordError.TooLong,
-    )
+    val emptyPasswordValidationResult = SignUpValidationResult(passwordError = PasswordError.Empty)
+    val shortPasswordValidationResult = SignUpValidationResult(passwordError = PasswordError.TooShort)
+    val longPasswordValidationResult = SignUpValidationResult(passwordError = PasswordError.TooLong)
 
     viewModelRobot
+      // Preparing
       .buildViewModel()
       .enterEmail(email)
       .enterDisplayName(displayName)
       .mockSignUpValidationResultForCredentials(displayName, email, emptyPassword, emptyPasswordValidationResult)
       .mockSignUpValidationResultForCredentials(displayName, email, shortPassword, shortPasswordValidationResult)
       .mockSignUpValidationResultForCredentials(displayName, email, longPassword, longPasswordValidationResult)
-      .assertViewStates(
-        initialViewState,
-        viewStateWithEmptyPasswordError,
-        shortPasswordEnteredViewState,
-        viewStateWithShortPasswordError,
-        longPasswordEnteredViewState,
-        viewStateWithLongPasswordError,
-      ) {
-        enterPassword(emptyPassword)
-        clickSignUp()
-        enterPassword(shortPassword)
-        clickSignUp()
-        enterPassword(longPassword)
-        clickSignUp()
-      }
+      .assertViewState(initialViewState)
+      // 1. Test with empty password
+      .enterPassword(emptyPassword)
+      .clickSignUp()
+      .assertViewState(emptyPasswordViewState)
+      // 2. Test with too short password
+      .enterPassword(shortPassword)
+      .clickSignUp()
+      .assertViewState(shortPasswordViewState)
+      // 3. Test with too long password
+      .enterPassword(longPassword)
+      .clickSignUp()
+      .assertViewState(longPasswordViewState)
+      // Verifying the sign up use case never called
       .verifySignUpUseCaseNeverCalled()
   }
 
   @Test
   fun test_SignInClick() = runTest {
-    val navigateBackToSignInEvent = SignUpNavigationEvent.NavigateBackToSignIn
-
     viewModelRobot
       .buildViewModel()
-      .assertNavigationEvents(navigateBackToSignInEvent) {
-        clickSignIn()
-      }
+      .assertNavigationEvents(
+        expectedNavigationEvents = arrayOf(SignUpNavigationEvent.NavigateBackToSignIn),
+        action = {
+          clickSignIn()
+        },
+      )
   }
 
   @Test
-  fun test_NetworkDisconnected_UnexpectedErrorOccurs() = runTest {
+  fun `Network disconnected, or Unexpected error occurred, Show a corresponding error message`() = runTest {
     val displayName = defaultDisplayName
     val email = defaultEmail
     val password = defaultPassword
-
-    val expectedViewStateAfterFailure = SignUpViewState(displayName = displayName, email = email, password = password)
-
-    val inputValidationResult = SignUpValidationResult(displayNameError = null, emailError = null, passwordError = null)
-    val noNetworkSignUpResult = SignUpResult.Failure.NoNetworkConnection
-    val unexpectedExceptionMessage = "UNEXPECTED"
-    val unexpectedErrorSignUpResult = SignUpResult.Failure.Unknown(RuntimeException(unexpectedExceptionMessage))
+    val inputValidationResult = SignUpValidationResult()
+    val unexpectedException = RuntimeException()
 
     viewModelRobot
       .buildViewModel()
@@ -300,32 +237,37 @@ class SignUpViewModelTest {
       .enterEmail(email)
       .enterPassword(password)
       .mockSignUpValidationResultForCredentials(displayName, email, password, inputValidationResult)
-      // Mock for Network error
-      .mockSignUpResultForCredentials(displayName, email, password, noNetworkSignUpResult)
+      // 1. Network disconnected
       .assertMessages(
-        SignUpResult.Failure.NoNetworkConnection.description,
-      ) { clickSignUp() }
-      .assertViewState(expectedViewStateAfterFailure)
-      // Mock for unexpected error
-      .mockSignUpResultForCredentials(displayName, email, password, unexpectedErrorSignUpResult)
+        expectedMessages = arrayOf(NoNetworkConnection.description),
+        action = {
+          clickSignUp()
+          backgroundScope.launch {
+            emitSignUpResult(NoNetworkConnection)
+          }
+        },
+      )
+      // 2. Unexpected exception occurred
       .assertMessages(
-        Text(unexpectedExceptionMessage),
-      ) { clickSignUp() }
-      .assertViewState(expectedViewStateAfterFailure)
+        expectedMessages = arrayOf(Unknown(unexpectedException).description),
+        action = {
+          clickSignUp()
+          backgroundScope.launch {
+            emitSignUpResult(Unknown(unexpectedException))
+          }
+        },
+      )
   }
 
   @Test
-  fun test_EmailIsAlreadyInUse() = runTest {
+  fun `Email is already in use`() = runTest {
     val displayName = defaultDisplayName
     val email = defaultEmail
     val password = defaultPassword
 
     val inputValidationResult = SignUpValidationResult(displayNameError = null, emailError = null, passwordError = null)
-    val emailIsAlreadyInUseSignUpResult = SignUpResult.Failure.EmailAlreadyInUse
     val initialViewState = SignUpViewState(displayName = displayName, email = email, password = password)
-    val expectedViewStateAfterFailure = initialViewState.copy(
-      emailError = emailIsAlreadyInUseSignUpResult.description,
-    )
+    val emailIsAlreadyInUseViewState = initialViewState.copy(emailError = EmailAlreadyInUse.description)
 
     viewModelRobot
       .buildViewModel()
@@ -333,63 +275,9 @@ class SignUpViewModelTest {
       .enterEmail(email)
       .enterPassword(password)
       .mockSignUpValidationResultForCredentials(displayName, email, password, inputValidationResult)
-      .mockSignUpResultForCredentials(displayName, email, password, emailIsAlreadyInUseSignUpResult)
-      .assertViewStates(initialViewState, expectedViewStateAfterFailure) {
-        clickSignUp()
-      }
-  }
-
-  @Test
-  fun test_Authenticating_RetrievingProfile() = runTest {
-    val displayName = defaultDisplayName
-    val email = defaultEmail
-    val password = defaultPassword
-
-    val initialViewState = SignUpViewState(displayName = displayName, email = email, password = password)
-    val authenticatingViewState = initialViewState.copy(
-      loadingText = Authenticating.description,
-    )
-    val settingUpProfileViewState = authenticatingViewState.copy(
-      loadingText = SettingUpProfile.description,
-    )
-
-    val inputValidationResult = SignUpValidationResult(displayNameError = null, emailError = null, passwordError = null)
-    val signInResults = arrayOf(Authenticating, SettingUpProfile)
-
-    viewModelRobot
-      .buildViewModel()
-      .enterDisplayName(displayName)
-      .enterEmail(email)
-      .enterPassword(password)
-      .mockSignUpValidationResultForCredentials(displayName, email, password, inputValidationResult)
-      .mockSignUpResultForCredentials(displayName, email, password, *signInResults)
-      .assertViewStates(
-        initialViewState,
-        authenticatingViewState,
-        settingUpProfileViewState,
-      ) { clickSignUp() }
-  }
-
-  @Test
-  fun test_SuccessfullyAuthenticated() = runTest {
-    val displayName = defaultDisplayName
-    val email = defaultEmail
-    val password = defaultPassword
-
-    val inputValidationResult = SignUpValidationResult(displayNameError = null, emailError = null, passwordError = null)
-    val signInResult = Authenticated
-    val viewStateAfterAuthenticated = SignUpViewState(loadingText = Authenticated.description)
-
-    viewModelRobot
-      .buildViewModel()
-      .enterDisplayName(displayName)
-      .enterEmail(email)
-      .enterPassword(password)
-      .mockSignUpValidationResultForCredentials(displayName, email, password, inputValidationResult)
-      .mockSignUpResultForCredentials(displayName, email, password, signInResult)
-      .assertNavigationEvents(NavigateToMain) {
-        clickSignUp()
-      }
-      .assertViewState(viewStateAfterAuthenticated)
+      .assertViewState(initialViewState)
+      .clickSignUp()
+      .emitSignUpResult(EmailAlreadyInUse)
+      .assertViewState(emailIsAlreadyInUseViewState)
   }
 }
