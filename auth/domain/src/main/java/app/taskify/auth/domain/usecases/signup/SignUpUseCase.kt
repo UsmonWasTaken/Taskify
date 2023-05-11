@@ -30,12 +30,12 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class SignUpUseCase @Inject constructor(
+class ProdSignUpUseCase @Inject constructor(
   private val authRepository: AuthRepository,
   private val profileRepository: ProfileRepository,
-) {
+) : SignUpUseCase {
 
-  operator fun invoke(displayName: String, email: String, password: String): Flow<SignUpResult> = flow {
+  override fun invoke(displayName: String, email: String, password: String): Flow<SignUpResult> = flow {
     emit(Authenticating)
     val authResult = authRepository.signUp(email, password)
     val userId = authResult.getOrElse { throwable ->
@@ -56,4 +56,9 @@ class SignUpUseCase @Inject constructor(
     is EmailAlreadyInUseException -> EmailAlreadyInUse
     else -> Unknown(this)
   }
+}
+
+// This abstraction is created only to create fake implementations
+interface SignUpUseCase {
+  operator fun invoke(displayName: String, email: String, password: String): Flow<SignUpResult>
 }

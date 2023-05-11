@@ -1,5 +1,6 @@
 apply from: "$rootDir/plugins/kotlin-android.gradle"
 apply from: "$rootDir/plugins/android-test.gradle"
+apply from: "$rootDir/plugins/hilt-android.gradle"
 
 android {
   namespace 'app.taskify.auth.data'

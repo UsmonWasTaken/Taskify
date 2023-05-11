@@ -19,27 +19,31 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import app.taskify.auth.domain.repository.SignUpResult
 import app.taskify.auth.domain.usecases.signup.FakeSignUpUseCase
-import app.taskify.auth.domain.usecases.signup.FakeSignUpValidationUseCase
+import app.taskify.auth.domain.usecases.signup.MockSignUpValidationUseCase
 import app.taskify.auth.domain.usecases.signup.SignUpValidationResult
 import app.taskify.core.domain.Text
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
 class SignUpViewModelRobot {
 
-  private lateinit var fakeSignUpValidationUseCase: FakeSignUpValidationUseCase
+  private lateinit var mockSignUpValidationUseCase: MockSignUpValidationUseCase
   private lateinit var fakeSignUpUseCase: FakeSignUpUseCase
   private lateinit var savedStateHandle: SavedStateHandle
 
   private lateinit var viewModel: SignUpViewModel
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   fun buildViewModel() = apply {
-    fakeSignUpValidationUseCase = FakeSignUpValidationUseCase()
+    mockSignUpValidationUseCase = MockSignUpValidationUseCase()
     fakeSignUpUseCase = FakeSignUpUseCase()
     savedStateHandle = SavedStateHandle()
     viewModel = SignUpViewModel(
-      signUpValidationUseCase = fakeSignUpValidationUseCase.mock,
-      signUpUseCase = fakeSignUpUseCase.mock,
+      signUpValidationUseCase = mockSignUpValidationUseCase.mock,
+      signUpUseCase = fakeSignUpUseCase,
       savedStateHandle = savedStateHandle,
+      ioDispatcher = UnconfinedTestDispatcher(),
     )
   }
 
@@ -71,29 +75,18 @@ class SignUpViewModelRobot {
     assertThat(viewModel.viewState.value).isEqualTo(expectedViewState)
   }
 
-  suspend fun assertViewStates(
-    vararg expectedViewStates: SignUpViewState,
-    action: suspend SignUpViewModelRobot.() -> Unit,
-  ) = apply {
-    viewModel.viewState.test {
-      action()
-      for (expectedViewState in expectedViewStates) {
-        assertThat(awaitItem()).isEqualTo(expectedViewState)
-      }
-      cancelAndIgnoreRemainingEvents()
-    }
-  }
-
   suspend fun assertNavigationEvents(
     vararg expectedNavigationEvents: SignUpNavigationEvent,
-    action: suspend SignUpViewModelRobot.() -> Unit,
+    action: SignUpViewModelRobot.() -> Unit,
   ) = apply {
     viewModel.navigationFlow.test {
       action()
       for (expectedNavigationEvent in expectedNavigationEvents) {
         assertThat(awaitItem()).isEqualTo(expectedNavigationEvent)
       }
-      cancelAndIgnoreRemainingEvents()
+      cancelAndConsumeRemainingEvents().takeIf { it.isNotEmpty() }?.let { events ->
+        println("Consuming events are available: $events")
+      }
     }
   }
 
@@ -118,25 +111,20 @@ class SignUpViewModelRobot {
     password: String,
     validationResult: SignUpValidationResult,
   ) = apply {
-    fakeSignUpValidationUseCase.mockValidationResultForCredentials(displayName, email, password, validationResult)
+    mockSignUpValidationUseCase.mockValidationResultForCredentials(displayName, email, password, validationResult)
   }
 
-  fun mockSignUpResultForCredentials(
-    displayName: String,
-    email: String,
-    password: String,
-    vararg signUpResult: SignUpResult,
-  ) = apply {
-    fakeSignUpUseCase.mockSignUpResultForCredentials(displayName, email, password, *signUpResult)
+  suspend fun emitSignUpResult(result: SignUpResult) = apply {
+    fakeSignUpUseCase.emit(result)
   }
 
   /* Call verifications */
 
   fun verifySignUpUseCaseNeverCalled() = apply {
-    fakeSignUpUseCase.verifyUseCaseNeverCalled()
+    fakeSignUpUseCase.verifyInvokeNeverCalled()
   }
 
-  fun verifySignUpVerificationUseCaseNeverCalled() = apply {
-    fakeSignUpValidationUseCase.verifyUseCaseNeverCalled()
+  fun verifySignUpValidationUseCaseNeverCalled() = apply {
+    mockSignUpValidationUseCase.verifyUseCaseNeverCalled()
   }
 }

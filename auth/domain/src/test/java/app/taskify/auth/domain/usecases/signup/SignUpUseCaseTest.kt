@@ -27,12 +27,10 @@ import app.taskify.auth.domain.repository.SignUpResult.SettingUpProfile
 import app.taskify.auth.domain.util.EmailAlreadyInUseException
 import app.taskify.core.domain.exception.NetworkException
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class SignUpUseCaseTest {
 
   private lateinit var fakeAuthRepository: FakeAuthRepository
@@ -47,7 +45,7 @@ class SignUpUseCaseTest {
   fun setup() {
     fakeAuthRepository = FakeAuthRepository()
     fakeProfileRepository = FakeProfileRepository()
-    signUpUseCase = SignUpUseCase(
+    signUpUseCase = ProdSignUpUseCase(
       authRepository = fakeAuthRepository.mock,
       profileRepository = fakeProfileRepository.mock,
     )

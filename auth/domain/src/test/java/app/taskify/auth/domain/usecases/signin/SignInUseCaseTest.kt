@@ -27,12 +27,10 @@ import app.taskify.auth.domain.repository.SignInResult.RetrievingProfile
 import app.taskify.auth.domain.util.InvalidCredentialsException
 import app.taskify.core.domain.exception.NetworkException
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class SignInUseCaseTest {
 
   private lateinit var fakeAuthRepository: FakeAuthRepository
@@ -46,7 +44,7 @@ class SignInUseCaseTest {
   fun setup() {
     fakeAuthRepository = FakeAuthRepository()
     fakeProfileRepository = FakeProfileRepository()
-    signInUseCase = SignInUseCase(
+    signInUseCase = ProdSignInUseCase(
       authRepository = fakeAuthRepository.mock,
       profileRepository = fakeProfileRepository.mock,
     )

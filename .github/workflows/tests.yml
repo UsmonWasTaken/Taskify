@@ -1,12 +1,10 @@
 name: Unit and Integration tests
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
+      - development
 
 concurrency:
   group: tests-${{ github.ref }}
@@ -39,11 +37,6 @@ jobs:
       - name: Run local tests
         run: ./gradlew test
 
-      - name: Upload test reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: unit-test-reports
-          path: '*/build/reports/tests'
 
   androidTest:
     needs: unit_test

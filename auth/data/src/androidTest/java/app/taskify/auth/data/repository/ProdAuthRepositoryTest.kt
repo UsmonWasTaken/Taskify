@@ -22,12 +22,10 @@ import app.taskify.core.domain.exception.NetworkException
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthException
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class ProdAuthRepositoryTest {
 
   private lateinit var fakeFirebaseAuth: FakeFirebaseAuth
@@ -39,7 +37,9 @@ class ProdAuthRepositoryTest {
   @Before
   fun setup() {
     fakeFirebaseAuth = FakeFirebaseAuth()
-    repository = ProdAuthRepository(fakeFirebaseAuth.mock)
+    repository = ProdAuthRepository(
+      firebaseAuth = fakeFirebaseAuth.mock,
+    )
   }
 
   @Test

@@ -32,7 +32,7 @@ import app.taskify.auth.presentation.signup.SignUpNavigationEvent.NavigateToMain
 import app.taskify.core.domain.Text
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flowOn
@@ -47,6 +47,7 @@ class SignUpViewModel @Inject constructor(
   private val signUpValidationUseCase: SignUpValidationUseCase,
   private val signUpUseCase: SignUpUseCase,
   private val savedStateHandle: SavedStateHandle,
+  private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
   val viewState = savedStateHandle.getStateFlow(VIEW_STATE, SignUpViewState())
@@ -88,7 +89,7 @@ class SignUpViewModel @Inject constructor(
 
     signUpJob?.cancel()
     signUpJob = signUpUseCase(displayName, email, password)
-      .flowOn(Dispatchers.IO)
+      .flowOn(ioDispatcher)
       .onEach(::handleSignUpResult)
       .launchIn(viewModelScope)
   }

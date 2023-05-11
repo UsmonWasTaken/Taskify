@@ -19,8 +19,8 @@ import app.taskify.auth.domain.R
 import app.taskify.core.domain.Text
 
 data class SignInValidationResult(
-  val emailError: EmailError?,
-  val passwordError: PasswordError?,
+  val emailError: EmailError? = null,
+  val passwordError: PasswordError? = null,
 ) {
 
   inline val areInputsValid: Boolean
