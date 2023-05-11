@@ -57,7 +57,7 @@ class SignUpViewModelTest {
     val displayName = defaultDisplayName
     val email = defaultEmail
     val password = defaultPassword
-    val inputValidationResult = SignUpValidationResult(displayNameError = null, emailError = null, passwordError = null)
+    val inputValidationResult = SignUpValidationResult()
 
     val credentialsEnteredViewState = SignUpViewState(displayName = displayName, email = email, password = password)
     val authenticatingViewState = credentialsEnteredViewState.copy(loadingText = Authenticating.description)
@@ -265,7 +265,7 @@ class SignUpViewModelTest {
     val email = defaultEmail
     val password = defaultPassword
 
-    val inputValidationResult = SignUpValidationResult(displayNameError = null, emailError = null, passwordError = null)
+    val inputValidationResult = SignUpValidationResult()
     val initialViewState = SignUpViewState(displayName = displayName, email = email, password = password)
     val emailIsAlreadyInUseViewState = initialViewState.copy(emailError = EmailAlreadyInUse.description)
 

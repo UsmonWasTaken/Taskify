@@ -37,7 +37,11 @@ dependencies {
 
   coreLibraryDesugaring(libs.desugar)
 
+  implementation project(":core:data")
   implementation project(":core:presentation")
+
+  implementation project(":auth:data")
+  implementation project(":auth:presentation")
 
   implementation(libs.core.ktx)
   implementation(libs.appcompat)
