@@ -5,7 +5,8 @@
 
 **Taskify** is an open-source to-do list and reminders application for Android devices.
 
-## Discontinued! Apparently, I was overengenering at that time, and wasting my time. The project is no longer maintained.
+## Discontinued! 
+**Apparently, I was overengenering at that time, and wasting my time. The project is no longer maintained.**
 
 *More information coming soon…*
 
